@@ -1,0 +1,170 @@
+<template>
+    <el-container>
+        <el-aside width="200px">
+            <el-menu :default-active="'0'" @select="changeSelect">
+                <el-menu-item index="1">
+                    <span slot="title">商店</span>
+                </el-menu-item>
+                <el-menu-item index="2">
+                    <span slot="title">购物车</span>
+                </el-menu-item>
+                <el-menu-item index="3">
+                    <span slot="title">订单</span>
+                </el-menu-item>
+            </el-menu>
+        </el-aside>
+        <transition name="el-fade-in-linear">
+            <!--商店-->
+            <el-main v-if="status === 1">
+                <div class="background">
+                    <div v-for="(o, index) in goods" :key="index">
+                        <transition name="fade" appear>
+                            <div class="item" v-bind:class="{has: curSelect[index] > 0, outOff: o.inventory === 0}">
+                                <!--<p>No.{{o.id}} </p>-->
+                                <h1>{{o.name}}</h1>
+                                <!--suppress HtmlUnknownTarget -->
+                                <img :src="o.img" alt="Image">
+                                <div style="height: 20px">
+                                    <el-tag v-for="t in o.tag" :key="t" class="tag">{{tags[t]}}</el-tag>
+                                </div>
+
+                                <h2 v-if="o.inventory > 0">剩余数量：{{o.inventory}}</h2>
+                                <h2 v-else>无库存剩余</h2>
+                                <p>价格：{{o.price}}</p>
+                                <el-input-number v-model="curSelect[index]" :min="0" :max="o.inventory"
+                                                 label="选购数量"></el-input-number>
+                            </div>
+                        </transition>
+                    </div>
+                </div>
+                <h1>总计：{{total}}</h1>
+                <el-button type="primary" round :disabled="total <= 0">加入购物车</el-button>
+                <el-button type="danger" round :disabled="total <= 0">直接购买</el-button>
+            </el-main>
+        </transition>
+        <transition name="el-fade-in-linear">
+            <!--购物车-->
+            <el-main>
+                <div class="background">
+
+                </div>
+            </el-main>
+        </transition>
+        <transition name="el-fade-in-linear">
+            <!--订单-->
+            <el-main>
+                <div class="background">
+                </div>
+            </el-main>
+        </transition>
+    </el-container>
+</template>
+
+<script>
+    export default {
+        name: "Customer",
+
+        data() {
+            return {
+                status: 0,
+                tags: [
+                    'abc', 'def'
+                ],
+                goods: [
+                    {id: 1, name: 'a', tag: [0], price: 10, img: require("../assets/logo.png"), inventory: 100},
+                    {id: 2, name: 'b', tag: [1], price: 15, img: require("../assets/logo.png"), inventory: 10},
+                    {id: 3, name: 'c', tag: [0, 1], price: 1, img: require("../assets/logo.png"), inventory: 0},
+                    {id: 4, name: 'd', tag: [], price: 13, img: require("../assets/logo.png"), inventory: 5},
+                ],
+                curSelect: [],
+                cart: [],
+                order: []
+            }
+        },
+
+        created() {
+            // TODO fetch
+        },
+
+        computed: {
+            total() {
+                let sum = 0;
+                for (let i = 0; i < this.curSelect.length; ++i) {
+                    sum += this.curSelect[i] == null ? 0 : this.curSelect[i] * this.goods[i].price;
+                }
+                return sum;
+            }
+        },
+
+        methods: {
+            changeSelect(index) {
+                this.status = parseInt(index)
+            },
+
+            addToCart() {
+                // TODO 加入购物车
+            },
+
+            makeOrder() {
+                // TODO 制作订单
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .background {
+        background-color: #e8e8e8;
+        display: flex;
+        display: -webkit-flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .item {
+        /*阴影效果*/
+        filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090, direction=120, strength=4); /*ie*/
+        -moz-box-shadow: 2px 2px 10px #909090; /*firefox*/
+        -webkit-box-shadow: 2px 2px 10px #909090; /*safari或chrome*/
+        box-shadow: 2px 2px 10px #909090; /*opera或ie9*/
+    }
+
+    .item {
+        width: 300px;
+        text-align: center;
+        margin: 10px 10px 10px 10px;
+        padding: 5px 5px 5px 5px;
+        /*圆角效果*/
+        border-radius: 20px;
+        -webkit-border-radius: 9px;
+        -moz-border-radius: 9px;
+        background-color: white;
+        transition: 1s;
+    }
+
+    /*noinspection CssUnusedSymbol*/
+    .has {
+        background-color: aqua;
+    }
+
+    /*noinspection CssUnusedSymbol*/
+    .outOff {
+        background-color: red;
+    }
+
+    /*noinspection CssUnusedSymbol*/
+    .fade-enter-active, .fade-leave-active {
+        transition: all 1s;
+    }
+
+    /*noinspection CssUnusedSymbol*/
+    .fade-enter, .fade-leave-to {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    .tag {
+        margin-left: 2px;
+        margin-right: 2px;
+    }
+</style>
