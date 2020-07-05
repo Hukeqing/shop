@@ -46,7 +46,7 @@
                     return
                 }
                 // TODO 登录
-                this.$emit('login', {id: 1, admin: false})
+                this.$emit('login', {id: 1, admin: true})
             },
 
             register() {

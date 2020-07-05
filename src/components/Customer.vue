@@ -13,78 +13,85 @@
                 </el-menu-item>
             </el-menu>
         </el-aside>
-        <transition name="el-fade-in-linear">
-            <!--商店-->
-            <el-main v-if="status === 1">
-                <div class="background">
+        <el-main>
+            <transition name="el-fade-in-linear">
+                <!--商店-->
+                <div v-if="status === 1">
+                    <div class="background">
 
-                    <div v-for="(o, index) in goods" :key="index">
-                        <transition name="fade" appear>
-                            <div class="item" v-bind:class="{has: curSelect[index] > 0, outOff: o.inventory === 0}">
-                                <!--<p>No.{{o.id}} </p>-->
-                                <h1>{{o.name}}</h1>
-                                <!--suppress HtmlUnknownTarget -->
-                                <img :src="o.img" alt="Image">
-                                <div style="height: 20px">
-                                    <el-tag v-for="t in o.tag" :key="t" class="tag">{{tags[t]}}</el-tag>
+                        <div v-for="(o, index) in goods" :key="index">
+                            <transition name="fade" appear>
+                                <div class="item" v-bind:class="{has: curSelect[index] > 0, outOff: o.inventory === 0}">
+                                    <!--<p>No.{{o.id}} </p>-->
+                                    <h1>{{o.name}}</h1>
+                                    <!--suppress HtmlUnknownTarget -->
+                                    <img :src="o.img" alt="Image">
+                                    <div style="height: 20px">
+                                        <template v-for="t in o.tag">
+                                            <el-tag v-if="tags[t].work===true" :key="t" class="tag">
+                                                {{tags[t].tag}}
+                                            </el-tag>
+                                        </template>
+                                    </div>
+
+                                    <h2 v-if="o.inventory > 0">剩余数量：{{o.inventory}}</h2>
+                                    <h2 v-else>无库存剩余</h2>
+                                    <p>价格：{{o.price}}</p>
+                                    <el-input-number v-model="curSelect[index]" :min="0" :max="o.inventory"
+                                                     label="选购数量"></el-input-number>
                                 </div>
+                            </transition>
+                        </div>
 
-                                <h2 v-if="o.inventory > 0">剩余数量：{{o.inventory}}</h2>
-                                <h2 v-else>无库存剩余</h2>
-                                <p>价格：{{o.price}}</p>
-                                <el-input-number v-model="curSelect[index]" :min="0" :max="o.inventory"
-                                                 label="选购数量"></el-input-number>
-                            </div>
-                        </transition>
                     </div>
 
+                    <!--<el-button-group>-->
+                    <!--<el-button type="primary" icon="el-icon-arrow-left">上一页</el-button>-->
+                    <!--<el-button type="primary">下一页<i class="el-icon-arrow-right el-icon&#45;&#45;right"></i></el-button>-->
+                    <!--</el-button-group>-->
+
+                    <h1>总计：{{total}}</h1>
+                    <el-button type="primary" round :disabled="total <= 0">加入购物车</el-button>
+                    <el-button type="danger" round :disabled="total <= 0">直接购买</el-button>
                 </div>
+            </transition>
+            <transition name="el-fade-in-linear">
+                <!--购物车-->
+                <div v-if="status === 2">
+                    <div class="background">
 
-                <!--<el-button-group>-->
-                <!--<el-button type="primary" icon="el-icon-arrow-left">上一页</el-button>-->
-                <!--<el-button type="primary">下一页<i class="el-icon-arrow-right el-icon&#45;&#45;right"></i></el-button>-->
-                <!--</el-button-group>-->
+                        <div v-for="(o, index) in cart" :key="index">
+                            <transition name="fade" appear>
+                                <div class="item"
+                                     v-on:click="setSelect(index)"
+                                     v-bind:class="{has: curSelect[index] === 1}">
+                                    <!--<p>No.{{o.id}} </p>-->
+                                    <h1>{{goods[o.gid].name}}</h1>
+                                    <!--suppress HtmlUnknownTarget -->
+                                    <img :src="goods[o.gid].img" alt="Image">
+                                    <div style="height: 20px">
+                                        <template v-for="t in goods[o.gid].tag">
+                                            <el-tag v-if="tags[t].work===true" :key="t" class="tag">
+                                                {{tags[t].tag}}
+                                            </el-tag>
+                                        </template>
+                                    </div>
 
-                <h1>总计：{{total}}</h1>
-                <el-button type="primary" round :disabled="total <= 0">加入购物车</el-button>
-                <el-button type="danger" round :disabled="total <= 0">直接购买</el-button>
-            </el-main>
-        </transition>
-        <transition name="el-fade-in-linear">
-            <!--购物车-->
-            <el-main v-if="status === 2">
-                <div class="background">
-
-                    <div v-for="(o, index) in cart" :key="index">
-                        <transition name="fade" appear>
-                            <div class="item"
-                                 v-on:click="setSelect(index)"
-                                 v-bind:class="{has: curSelect[index] === 1}">
-                                <!--<p>No.{{o.id}} </p>-->
-                                <h1>{{goods[o.gid].name}}</h1>
-                                <!--suppress HtmlUnknownTarget -->
-                                <img :src="goods[o.gid].img" alt="Image">
-                                <div style="height: 20px">
-                                    <el-tag v-for="t in goods[o.gid].tag" :key="t" class="tag">{{tags[t]}}</el-tag>
+                                    <h2>数量：{{o.count}}</h2>
+                                    <p>价格：{{goods[o.gid].price * o.count}}</p>
                                 </div>
+                            </transition>
+                        </div>
 
-                                <h2>数量：{{o.count}}</h2>
-                                <p>价格：{{goods[o.gid].price * o.count}}</p>
-                            </div>
-                        </transition>
                     </div>
-
+                    <h1>总计：{{total}}</h1>
+                    <el-button type="primary" round :disabled="total <= 0">从购物车移除</el-button>
+                    <el-button type="danger" round :disabled="total <= 0">直接购买</el-button>
                 </div>
-                <h1>总计：{{total}}</h1>
-                <el-button type="primary" round :disabled="total <= 0">从购物车移除</el-button>
-                <el-button type="danger" round :disabled="total <= 0">直接购买</el-button>
-            </el-main>
-        </transition>
-        <transition name="el-fade-in-linear">
-            <!--订单-->
-            <el-main v-if="status === 3">
-                <div class="background">
-
+            </transition>
+            <transition name="el-fade-in-linear">
+                <!--订单-->
+                <div class="background" v-if="status === 3">
                     <div v-for="(o, index) in order" :key="index">
                         <transition name="fade" appear>
                             <div class="item">
@@ -95,39 +102,38 @@
                             </div>
                         </transition>
                     </div>
-
                 </div>
-            </el-main>
-        </transition>
+            </transition>
+            <transition name="el-fade-in-linear">
+                <!--订单详情-->
+                <div v-if="status === 4">
+                    <div class="background">
+                        <div v-for="(o, index) in detail.data" :key="index">
+                            <transition name="fade" appear>
+                                <div class="item">
+                                    <h1>{{goods[o.gid].name}}</h1>
+                                    <!--suppress HtmlUnknownTarget -->
+                                    <img :src="goods[o.gid].img" alt="Image">
+                                    <div style="height: 20px">
+                                        <template v-for="t in goods[o.gid].tag">
+                                            <el-tag v-if="tags[t].work===true" :key="t" class="tag">
+                                                {{tags[t].tag}}
+                                            </el-tag>
+                                        </template>
+                                    </div>
 
-        <transition name="el-fade-in-linear">
-            <!--订单详情-->
-            <el-main v-if="status === 4">
-                <div class="background">
-
-                    <div v-for="(o, index) in detail.data" :key="index">
-                        <transition name="fade" appear>
-                            <div class="item">
-                                <h1>{{goods[o.gid].name}}</h1>
-                                <!--suppress HtmlUnknownTarget -->
-                                <img :src="goods[o.gid].img" alt="Image">
-                                <div style="height: 20px">
-                                    <el-tag v-for="t in goods[o.gid].tag" :key="t" class="tag">{{tags[t]}}</el-tag>
+                                    <h2>数量：{{o.count}}</h2>
+                                    <p>价格：{{o.cost}}</p>
                                 </div>
-
-                                <h2>数量：{{o.count}}</h2>
-                                <p>价格：{{o.cost}}</p>
-                            </div>
-                        </transition>
+                            </transition>
+                        </div>
                     </div>
-
+                    <h1>总计：{{total}}</h1>
+                    <el-button type="primary" round :disabled="status !== 0">付款</el-button>
+                    <el-button type="danger" round :disabled="status === 4">取消订单</el-button>
                 </div>
-                <h1>总计：{{total}}</h1>
-                <el-button type="primary" round :disabled="status !== 0">付款</el-button>
-                <el-button type="danger" round :disabled="status === 4">取消订单</el-button>
-            </el-main>
-        </transition>
-
+            </transition>
+        </el-main>
     </el-container>
 </template>
 
@@ -145,13 +151,15 @@
             return {
                 status: 0,
                 tags: [
-                    'abc', 'def'
+                    {tag: 'abc', work: true},
+                    {tag: 'def', work: true},
+                    {tag: 'aaa', work: false}
                 ],
                 goods: [
-                    {id: 1, name: 'a', tag: [0], price: 10, img: require("../assets/logo.png"), inventory: 100},
-                    {id: 2, name: 'b', tag: [1], price: 15, img: require("../assets/logo.png"), inventory: 10},
-                    {id: 3, name: 'c', tag: [0, 1], price: 1, img: require("../assets/logo.png"), inventory: 0},
-                    {id: 4, name: 'd', tag: [], price: 13, img: require("../assets/logo.png"), inventory: 5},
+                    {id: 1, name: 'a', tag: [0, 2], price: 10, img: require("../assets/logo.png"), inventory: 100},
+                    {id: 2, name: 'b', tag: [1, 2], price: 15, img: require("../assets/logo.png"), inventory: 10},
+                    {id: 3, name: 'c', tag: [0, 1, 2], price: 1, img: require("../assets/logo.png"), inventory: 0},
+                    {id: 4, name: 'd', tag: [2], price: 13, img: require("../assets/logo.png"), inventory: 5},
                 ],
                 curSelect: [],
                 cart: [

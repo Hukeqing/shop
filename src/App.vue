@@ -2,6 +2,7 @@
     <div id="app">
         <Login v-if="status===0" v-on:login="login"></Login>
         <Customer v-if="status === 1" :user-id="userId"></Customer>
+        <Admin v-if="status === 2" :user-id="userId"></Admin>
     </div>
 </template>
 
@@ -10,10 +11,12 @@
 
     import Login from "@/components/Login";
     import Customer from "@/components/Customer";
+    import Admin from "@/components/Admin";
 
     export default {
         name: 'App',
         components: {
+            Admin,
             Login,
             Customer
         },
@@ -32,9 +35,11 @@
 
         methods: {
             login(user) {
-                this.userId = user.id;
+                this.userId = user.id
                 this.admin = user.admin
-                if (this.admin) {
+                console.log(this.admin)
+                if (this.admin === true) {
+                    console.log(user)
                     this.status = 2
                 } else {
                     this.status = 1;
