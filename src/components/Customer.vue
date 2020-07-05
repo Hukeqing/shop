@@ -14,8 +14,8 @@
             </el-menu>
         </el-aside>
         <el-main>
-            <Shop v-if="status === 1" :goods="goods" :tags="tags"></Shop>
-            <Cart v-if="status === 2" :goods="goods" :tags="tags"></Cart>
+            <Shop v-if="status === 1" :goods="goods" :tags="tags" :user-id="userId"></Shop>
+            <Cart v-if="status === 2" :goods="goods" :tags="tags" :user-id="userId" v-on:flush="flush"></Cart>
             <Order v-if="status === 3" :goods="goods" :tags="tags"></Order>
         </el-main>
     </el-container>
@@ -29,9 +29,9 @@
     export default {
         name: "Customer",
         components: {
-            Order,
             Shop,
-            Cart
+            Cart,
+            Order
         },
         props: {
             userId: Number
@@ -55,18 +55,42 @@
         },
 
         created() {
+            fetch('http://119.3.172.223/vue/shopAPI/goods.php').then(response => response.json()).then(json => {
+                if (json.errorCode !== 0) {
+                    this.$message.error('系统异常，请联系管理员')
+                    return
+                }
+                this.goods = json.data
+            }).catch(() => {
+                this.$message.error('网络异常')
+            })
+
+            fetch('http://119.3.172.223/vue/shopAPI/tags.php').then(response => response.json()).then(json => {
+                if (json.errorCode !== 0) {
+                    this.$message.error('系统异常，请联系管理员')
+                    return
+                }
+                this.goods = json.data
+            }).catch(() => {
+                this.$message.error('网络异常')
+            })
         },
 
-        computed: {
-        },
+        computed: {},
 
         methods: {
             changeSelect(index) {
                 this.status = 0
-                this.curSelect = []
-                // TODO 链接数据库
                 setTimeout(() => {
                     this.status = parseInt(index)
+                }, 300);
+            },
+
+            flush() {
+                let lastStatus = this.status
+                this.status = 0
+                setTimeout(() => {
+                    this.status = parseInt(lastStatus)
                 }, 300);
             }
         }

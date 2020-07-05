@@ -9,7 +9,7 @@
                             <h1>{{o.time}}</h1>
                             <h2>费用：{{o.totalCost}}</h2>
                             <p>状态：{{statusName(o.status)}}</p>
-                            <el-button type="primary" round v-on:click="getDetail(o.id)">详情</el-button>
+                            <el-button type="primary" round v-on:click="getDetail(o)">详情</el-button>
                         </div>
                     </transition>
                 </div>
@@ -40,8 +40,9 @@
                         </div>
                     </div>
                     <h1>总计：{{total}}</h1>
-                    <el-button type="primary" round :disabled="detail.status !== 0">付款</el-button>
-                    <el-button type="danger" round :disabled="detail.status === 2">取消订单</el-button>
+                    <el-button type="primary" round :disabled="detail.status !== 0" v-on:click="payFor()">付款</el-button>
+                    <el-button type="danger" round :disabled="detail.status < 2" v-on:click="cancelOrder()">取消订单
+                    </el-button>
                 </div>
             </el-dialog>
         </div>
@@ -54,14 +55,10 @@
         data() {
             return {
                 order: [
-                    /**
-                     * 0 for make order
-                     * 1 for paid
-                     * 2 for send
-                     */
                     {id: 1, totalCost: 10, status: 0, time: "2020-7-5"},
                     {id: 2, totalCost: 230, status: 1, time: "2020-7-6"},
-                    {id: 3, totalCost: 123, status: 2, time: "2020-7-7"}
+                    {id: 3, totalCost: 123, status: 2, time: "2020-7-7"},
+                    {id: 4, totalCost: 161, status: 3, time: "2020-7-8"}
                 ],
                 detail: {
                     id: 1,
@@ -73,6 +70,18 @@
                 },
                 showDialog: false
             }
+        },
+
+        created() {
+            fetch('http://119.3.172.223/vue/shopAPI/order.php').then(response => response.json()).then(json => {
+                if (json.errorCode !== 0) {
+                    this.$message.error('系统异常，请联系管理员')
+                    return
+                }
+                this.order = json.data
+            }).catch(() => {
+                this.$message.error('网络异常')
+            })
         },
 
         props: {
@@ -92,23 +101,64 @@
 
         methods: {
             statusName(st) {
+                /**
+                 * 0 for make order
+                 * 1 for paid
+                 * 2 for send
+                 * 3 for cancel
+                 */
                 if (st === 0) {
                     return "未付款"
                 } else if (st === 1) {
                     return "已付款"
                 } else if (st === 2) {
                     return "已送达"
-                } else {
-                    return null
+                } else if (st === 3) {
+                    return "已取消"
                 }
+                this.$message.error("系统故障，请联系管理员")
+                return null
             },
 
-            getDetail(id) {
-                console.log(id)
-                // TODO 链接数据库
-                setTimeout(() => {
+            getDetail(o) {
+                fetch('http://119.3.172.223/vue/shopAPI/detail.php?id=' + o.id).then(response => response.json()).then(json => {
+                    if (json.errorCode !== 0) {
+                        this.$message.error('系统异常，请联系管理员')
+                        return
+                    }
+                    this.detail.id = o.id
+                    this.detail.status = o.status
+                    this.detail.data = json.data
                     this.showDialog = true;
-                }, 300)
+                }).catch(() => {
+                    this.$message.error('网络异常')
+                })
+            },
+
+            payFor() {
+                fetch('http://119.3.172.223/vue/shopAPI/payFor.php?id=' + this.detail.id).then(response => response.json()).then(json => {
+                    if (json.errorCode !== 0) {
+                        this.$message.error('系统异常，请联系管理员')
+                        return
+                    }
+                    this.$emit('flush')
+                    this.$message.success('付款成功');
+                }).catch(() => {
+                    this.$message.error('网络异常')
+                })
+            },
+
+            cancelOrder() {
+                fetch('http://119.3.172.223/vue/shopAPI/cancelOrder.php?id=' + this.detail.id).then(response => response.json()).then(json => {
+                    if (json.errorCode !== 0) {
+                        this.$message.error('系统异常，请联系管理员')
+                        return
+                    }
+                    this.$emit('flush')
+                    this.$message.success('取消成功');
+                }).catch(() => {
+                    this.$message.error('网络异常')
+                })
             }
         }
     }

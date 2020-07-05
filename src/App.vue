@@ -1,9 +1,19 @@
 <template>
-    <div id="app">
-        <Login v-if="status===0" v-on:login="login"></Login>
-        <Customer v-if="status === 1" :user-id="userId"></Customer>
-        <Admin v-if="status === 2" :user-id="userId"></Admin>
-    </div>
+    <el-container>
+        <el-header>
+            <div v-if="status !== 0">
+                <el-avatar class="item header" v-bind:class="{headerAdmin: admin}">{{userName}}
+                </el-avatar>
+            </div>
+        </el-header>
+        <el-main>
+            <div id="app">
+                <Login v-if="status===0" v-on:login="login"></Login>
+                <Customer v-if="status === 1" :user-id="userId"></Customer>
+                <Admin v-if="status === 2" :user-id="userId"></Admin>
+            </div>
+        </el-main>
+    </el-container>
 </template>
 
 <script>
@@ -34,6 +44,7 @@
                  */
                 status: 0,
                 userId: 0,
+                userName: "123",
                 admin: false
             }
         },
@@ -42,12 +53,14 @@
             login(user) {
                 this.userId = user.id
                 this.admin = user.admin
+                this.userName = user.user
                 console.log(this.admin)
                 if (this.admin === true) {
-                    console.log(user)
                     this.status = 2
+                    this.$message.success('欢迎，管理员 ' + user.user)
                 } else {
-                    this.status = 1;
+                    this.status = 1
+                    this.$message.success('欢迎，' + user.user)
                 }
             }
         }
@@ -56,12 +69,26 @@
 
 <style>
     #app {
-        /*font-family: Avenir, Helvetica, Arial, sans-serif;*/
         font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
-        margin-top: 60px;
+        margin-top: 0;
+    }
+
+    .header {
+        float: right;
+        text-align: center;
+        line-height: 60px;
+        width: 60px;
+        height: 60px;
+        background-color: #409EFF;
+        transition: 1s;
+        overflow: hidden;
+    }
+
+    .headerAdmin {
+        background-color: #F56C6C;
     }
 </style>

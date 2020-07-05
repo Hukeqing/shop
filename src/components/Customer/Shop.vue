@@ -55,6 +55,7 @@
         },
 
         props: {
+            userId: Number,
             tags: Array,
             goods: Array,
         },
@@ -71,12 +72,56 @@
 
         methods: {
             addToCart() {
-                // TODO 加入购物车
+                let url = 'http://119.3.172.223/vue/shopAPI/addToCart.php?user=' + this.userId
+                for (let i = 0; i < this.curSelect.length; ++i) {
+                    if (this.curSelect[i] !== null && this.curSelect[i] !== 0) {
+                        fetch(url + '&id=' + i + '&cnt=' + this.curSelect[i])
+                            .then(response => response.json()).then(json => {
+                            if (json.errorCode !== 0) {
+                                this.$message.error('系统异常，请联系管理员')
+                                return
+                            }
+                            this.$notify({
+                                title: '成功添加到购物车',
+                                message: this.curSelect[i] + '件' + this.goods[i].name + '已经加入到你的购物车'
+                            });
+                        }).catch(() => {
+                            this.$message.error('网络异常')
+                        })
+                    }
+                }
             },
 
             makeOrder() {
-                // TODO 制作订单
-            },
+                let url = 'http://119.3.172.223/vue/shopAPI/makerOrder.php?user=' + this.userId
+                fetch(url).then(response => response.json()).then(json => {
+                    if (json.errorCode !== 0) {
+                        this.$message.error('系统异常，请联系管理员')
+                        return
+                    }
+                    this.$message.success('订单创建成功，编号：' + json.id);
+                    url = 'http://119.3.172.223/vue/shopAPI/updateOrder.php?orderId=' + json.id
+                    for (let i = 0; i < this.curSelect.length; ++i) {
+                        if (this.curSelect[i] !== null && this.curSelect[i] !== 0) {
+                            fetch(url + '&id=' + i + '&cnt=' + this.curSelect[i])
+                                .then(response => response.json()).then(json => {
+                                if (json.errorCode !== 0) {
+                                    this.$message.error('系统异常，请联系管理员')
+                                    return
+                                }
+                                this.$notify({
+                                    title: '成功添加到订单',
+                                    message: this.curSelect[i] + '件' + this.goods[i].name + '已经加入到你的订单中'
+                                });
+                            }).catch(() => {
+                                this.$message.error('网络异常')
+                            })
+                        }
+                    }
+                }).catch(() => {
+                    this.$message.error('网络异常')
+                })
+            }
         }
     }
 </script>

@@ -39,8 +39,18 @@
                     this.onLogin = true
                     return
                 }
-                // TODO 登录
-                this.$emit('login', {id: 1, admin: true})
+                this.$emit('login', {id: 1, admin: true, user: 'Admin'})
+
+                fetch('http://119.3.172.223/vue/shopAPI/login.php?user=' + this.user + '&pwd=' + this.password)
+                    .then(response => response.json()).then(json => {
+                    if (json.errorCode !== 0) {
+                        this.$message.error('用户名或密码出错')
+                    } else {
+                        this.$emit('login', {id: json.data.id, user: json.data.user, admin: json.data.admin})
+                    }
+                }).catch(() => {
+                    this.$message.error('网络出错')
+                })
             },
 
             register() {
@@ -48,8 +58,22 @@
                     this.onLogin = false
                     return
                 }
-                // TODO 注册
-                this.$emit('login', {id: 1, admin: false})
+                this.$emit('login', {id: 1, admin: false, user: 'User'})
+
+                if (this.password !== this.repeatPassword) {
+                    this.$message.error('两次输入的密码不相同')
+                    return
+                }
+                fetch('http://119.3.172.223/vue/shopAPI/register.php?user=' + this.user + '&pwd=' + this.password)
+                    .then(response => response.json()).then(json => {
+                    if (json.errorCode !== 0) {
+                        this.$message.error('用户名或密码出错')
+                    } else {
+                        this.$emit('login', {id: json.data.id, user: json.data.user, admin: json.data.admin})
+                    }
+                }).catch(() => {
+                    this.$message.error('网络出错')
+                })
             }
         }
     }
@@ -57,10 +81,6 @@
 
 <style scoped>
     .main {
-        margin-top: 20%;
-    }
-
-    p {
-        font: 14px Base;
+        margin-top: 10%;
     }
 </style>
