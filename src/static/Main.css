@@ -41,6 +41,11 @@
     transition: 1s;
 }
 
+img {
+    width: 100px;
+    height: 100px;
+}
+
 /*noinspection CssUnusedSymbol*/
 .has {
     background-color: aqua;

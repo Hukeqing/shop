@@ -18,11 +18,14 @@
                                 </template>
                             </div>
 
-                            <h2 v-if="o.inventory > 0">剩余数量：{{o.inventory}}</h2>
+                            <h3 v-if="o.inventory > 0">剩余数量：{{o.inventory}}</h3>
                             <h2 v-else>无库存剩余</h2>
                             <p>价格：{{o.price}}</p>
-                            <el-input-number v-model="curSelect[index]" :min="0" :max="o.inventory"
-                                             label="选购数量"></el-input-number>
+                            <p>
+                                购买：
+                                <el-input-number v-model="curSelect[index]" :min="0" :max="o.inventory"
+                                                 label="选购数量"></el-input-number>
+                            </p>
                         </div>
                     </transition>
                 </div>

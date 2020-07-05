@@ -44,13 +44,17 @@
         data() {
             return {
                 curSelect: [],
+                cart: [
+                    {id: 1, gid: 1, count: 10},
+                    {id: 2, gid: 2, count: 3},
+                    {id: 3, gid: 3, count: 14}
+                ],
             }
         },
 
         props: {
             tags: Array,
             goods: Array,
-            cart: Array
         },
         computed: {
             total() {

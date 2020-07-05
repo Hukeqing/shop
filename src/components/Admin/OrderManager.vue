@@ -40,8 +40,7 @@
                         </div>
                     </div>
                     <h1>总计：{{total}}</h1>
-                    <el-button type="primary" round :disabled="detail.status !== 0">付款</el-button>
-                    <el-button type="danger" round :disabled="detail.status === 2">取消订单</el-button>
+                    <el-button type="primary" round :disabled="detail.status !== 1">发货</el-button>
                 </div>
             </el-dialog>
         </div>
@@ -50,15 +49,22 @@
 
 <script>
     export default {
-        name: "Order",
+        name: "OrderManager",
+
         data() {
             return {
+                tags: [
+                    {id: 1, tag: 'abc', work: true},
+                    {id: 2, tag: 'def', work: true},
+                    {id: 3, tag: 'aaa', work: false}
+                ],
+                goods: [
+                    {id: 1, name: 'a', tag: [0, 2], price: 10, img: require("../../assets/logo.png"), inventory: 100},
+                    {id: 2, name: 'b', tag: [1, 2], price: 15, img: require("../../assets/logo.png"), inventory: 10},
+                    {id: 3, name: 'c', tag: [0, 1, 2], price: 1, img: require("../../assets/logo.png"), inventory: 0},
+                    {id: 4, name: 'd', tag: [2], price: 13, img: require("../../assets/logo.png"), inventory: 5},
+                ],
                 order: [
-                    /**
-                     * 0 for make order
-                     * 1 for paid
-                     * 2 for send
-                     */
                     {id: 1, totalCost: 10, status: 0, time: "2020-7-5"},
                     {id: 2, totalCost: 230, status: 1, time: "2020-7-6"},
                     {id: 3, totalCost: 123, status: 2, time: "2020-7-7"}
@@ -73,11 +79,6 @@
                 },
                 showDialog: false
             }
-        },
-
-        props: {
-            tags: Array,
-            goods: Array,
         },
 
         computed: {
