@@ -94,10 +94,38 @@
                     {id: 3, tag: 'aaa', work: false}
                 ],
                 goods: [
-                    {id: 1, name: 'a', tag: [0, 2], price: 10, img: require("../../assets/logo.png"), inventory: 100},
-                    {id: 2, name: 'b', tag: [1, 2], price: 15, img: require("../../assets/logo.png"), inventory: 10},
-                    {id: 3, name: 'c', tag: [0, 1, 2], price: 1, img: require("../../assets/logo.png"), inventory: 0},
-                    {id: 4, name: 'd', tag: [2], price: 13, img: require("../../assets/logo.png"), inventory: 5},
+                    {
+                        id: 1,
+                        name: 'a',
+                        tag: [0, 2],
+                        price: 10,
+                        img: "http://119.3.172.223/vue/shop/img/logo.82b9c7a5.png",
+                        inventory: 100
+                    },
+                    {
+                        id: 2,
+                        name: 'b',
+                        tag: [1, 2],
+                        price: 15,
+                        img: "http://119.3.172.223/vue/shop/img/logo.82b9c7a5.png",
+                        inventory: 10
+                    },
+                    {
+                        id: 3,
+                        name: 'c',
+                        tag: [0, 1, 2],
+                        price: 1,
+                        img: "http://119.3.172.223/vue/shop/img/logo.82b9c7a5.png",
+                        inventory: 0
+                    },
+                    {
+                        id: 4,
+                        name: 'd',
+                        tag: [2],
+                        price: 13,
+                        img: "http://119.3.172.223/vue/shop/img/logo.82b9c7a5.png",
+                        inventory: 5
+                    },
                 ],
                 curSelect: 0,
                 newGoodVisible: false

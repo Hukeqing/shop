@@ -12,8 +12,8 @@
                             <img :src="o.img" alt="Image">
                             <div style="height: 20px">
                                 <template v-for="t in o.tag">
-                                    <el-tag v-if="tags[t].work===true" :key="t" class="tag">
-                                        {{tags[t].tag}}
+                                    <el-tag v-if="tags[t - 1].work===true" :key="t" class="tag">
+                                        {{tags[t - 1].tag}}
                                     </el-tag>
                                 </template>
                             </div>
@@ -66,7 +66,7 @@
                 for (let i = 0; i < this.curSelect.length; ++i) {
                     sum += this.curSelect[i] == null ? 0 : this.curSelect[i] * this.goods[i].price;
                 }
-                return sum;
+                return sum.toFixed(2);
             }
         },
 

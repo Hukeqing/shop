@@ -39,7 +39,7 @@
                     this.onLogin = true
                     return
                 }
-                this.$emit('login', {id: 1, admin: true, user: 'Admin'})
+                // this.$emit('login', {id: 1, admin: true, user: 'Admin'})
 
                 fetch('http://119.3.172.223/vue/shopAPI/login.php?user=' + this.user + '&pwd=' + this.password)
                     .then(response => response.json()).then(json => {
@@ -58,7 +58,7 @@
                     this.onLogin = false
                     return
                 }
-                this.$emit('login', {id: 1, admin: false, user: 'User'})
+                // this.$emit('login', {id: 1, admin: false, user: 'User'})
 
                 if (this.password !== this.repeatPassword) {
                     this.$message.error('两次输入的密码不相同')
@@ -67,7 +67,7 @@
                 fetch('http://119.3.172.223/vue/shopAPI/register.php?user=' + this.user + '&pwd=' + this.password)
                     .then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
-                        this.$message.error('用户名或密码出错')
+                        this.$message.error('用户名已经被注册')
                     } else {
                         this.$emit('login', {id: json.data.id, user: json.data.user, admin: json.data.admin})
                     }

@@ -20,3 +20,5 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+/shopAPI/_mysql.php

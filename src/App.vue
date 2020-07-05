@@ -51,7 +51,7 @@
 
         methods: {
             login(user) {
-                this.userId = user.id
+                this.userId = parseInt(user.id)
                 this.admin = user.admin
                 this.userName = user.user
                 console.log(this.admin)

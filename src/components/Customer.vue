@@ -41,9 +41,9 @@
             return {
                 status: 0,
                 tags: [
-                    {tag: 'abc', work: true},
-                    {tag: 'def', work: true},
-                    {tag: 'aaa', work: false}
+                    {id: 1, tag: 'abc', work: true},
+                    {id: 2, tag: 'def', work: true},
+                    {id: 3, tag: 'aaa', work: false}
                 ],
                 goods: [
                     {id: 1, name: 'a', tag: [0, 2], price: 10, img: require("../assets/logo.png"), inventory: 100},
@@ -70,7 +70,7 @@
                     this.$message.error('系统异常，请联系管理员')
                     return
                 }
-                this.goods = json.data
+                this.tags = json.data
             }).catch(() => {
                 this.$message.error('网络异常')
             })
