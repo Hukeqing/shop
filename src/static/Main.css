@@ -1,0 +1,68 @@
+.background {
+    background-color: #e8e8e8;
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.item {
+    /*阴影效果*/
+    filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090, direction=120, strength=4); /*ie*/
+    -moz-box-shadow: 2px 2px 10px #909090; /*firefox*/
+    -webkit-box-shadow: 2px 2px 10px #909090; /*safari或chrome*/
+    box-shadow: 2px 2px 10px #909090; /*opera或ie9*/
+}
+
+
+.round-small {
+    width: 200px;
+    text-align: center;
+    margin: 10px 10px 10px 10px;
+    padding: 5px 5px 5px 5px;
+    /*圆角效果*/
+    border-radius: 20px;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    background-color: white;
+    transition: 1s;
+}
+
+.round {
+    width: 300px;
+    text-align: center;
+    margin: 10px 10px 10px 10px;
+    padding: 5px 5px 5px 5px;
+    /*圆角效果*/
+    border-radius: 20px;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    background-color: white;
+    transition: 1s;
+}
+
+/*noinspection CssUnusedSymbol*/
+.has {
+    background-color: aqua;
+}
+
+/*noinspection CssUnusedSymbol*/
+.outOff {
+    background-color: red;
+}
+
+/*noinspection CssUnusedSymbol*/
+.fade-enter-active, .fade-leave-active {
+    transition: all 1s;
+}
+
+/*noinspection CssUnusedSymbol*/
+.fade-enter, .fade-leave-to {
+    transform: translateY(30px);
+    opacity: 0;
+}
+
+.tag {
+    margin-left: 2px;
+    margin-right: 2px;
+}
