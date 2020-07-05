@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <Login v-if="status===0" v-on:login="login"></Login>
-        <Customer v-if="status === 1"></Customer>
+        <Customer v-if="status === 1" :user-id="userId"></Customer>
     </div>
 </template>
 

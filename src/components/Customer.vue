@@ -82,11 +82,52 @@
         </transition>
         <transition name="el-fade-in-linear">
             <!--订单-->
-            <el-main>
+            <el-main v-if="status === 3">
                 <div class="background">
+
+                    <div v-for="(o, index) in order" :key="index">
+                        <transition name="fade" appear>
+                            <div class="item">
+                                <h1>{{o.time}}</h1>
+                                <h2>费用：{{o.totalCost}}</h2>
+                                <p>状态：{{statusName(o.status)}}</p>
+                                <el-button type="primary" round v-on:click="getDetail(o.id)">详情</el-button>
+                            </div>
+                        </transition>
+                    </div>
+
                 </div>
             </el-main>
         </transition>
+
+        <transition name="el-fade-in-linear">
+            <!--订单详情-->
+            <el-main v-if="status === 4">
+                <div class="background">
+
+                    <div v-for="(o, index) in detail.data" :key="index">
+                        <transition name="fade" appear>
+                            <div class="item">
+                                <h1>{{goods[o.gid].name}}</h1>
+                                <!--suppress HtmlUnknownTarget -->
+                                <img :src="goods[o.gid].img" alt="Image">
+                                <div style="height: 20px">
+                                    <el-tag v-for="t in goods[o.gid].tag" :key="t" class="tag">{{tags[t]}}</el-tag>
+                                </div>
+
+                                <h2>数量：{{o.count}}</h2>
+                                <p>价格：{{o.cost}}</p>
+                            </div>
+                        </transition>
+                    </div>
+
+                </div>
+                <h1>总计：{{total}}</h1>
+                <el-button type="primary" round :disabled="status !== 0">付款</el-button>
+                <el-button type="danger" round :disabled="status === 4">取消订单</el-button>
+            </el-main>
+        </transition>
+
     </el-container>
 </template>
 
@@ -95,6 +136,10 @@
 
     export default {
         name: "Customer",
+
+        props: {
+            userId: Number
+        },
 
         data() {
             return {
@@ -114,12 +159,28 @@
                     {id: 2, gid: 2, count: 3},
                     {id: 3, gid: 3, count: 14}
                 ],
-                order: []
+                order: [
+                    /**
+                     * 0 for make order
+                     * 1 for paid
+                     * 2 for send
+                     */
+                    {id: 1, totalCost: 10, status: 0, time: "2020-7-5"},
+                    {id: 2, totalCost: 230, status: 1, time: "2020-7-6"},
+                    {id: 3, totalCost: 123, status: 2, time: "2020-7-7"}
+                ],
+                detail: {
+                    id: 1,
+                    status: 2,
+                    data: [
+                        {id: 1, gid: 1, count: 10, cost: 10},
+                        {id: 2, gid: 2, count: 3, cost: 30},
+                        {id: 3, gid: 3, count: 14, cost: 12}]
+                }
             }
         },
 
         created() {
-            // TODO fetch
         },
 
         computed: {
@@ -133,6 +194,10 @@
                     for (let i = 0; i < this.cart.length; ++i) {
                         sum += this.curSelect[i] === 1 ? this.cart[i].count * this.goods[this.cart[i].gid].price : 0;
                     }
+                } else if (this.status === 4) {
+                    for (let i = 0; i < this.detail.length; ++i) {
+                        sum += this.detail[i].cost
+                    }
                 }
                 return sum;
             },
@@ -142,6 +207,7 @@
             changeSelect(index) {
                 this.status = 0
                 this.curSelect = []
+                // TODO 链接数据库
                 setTimeout(() => {
                     this.status = parseInt(index)
                 }, 300);
@@ -158,6 +224,27 @@
             setSelect(index) {
                 Vue.set(this.curSelect, index, this.curSelect[index] === 1 ? 0 : 1);
                 console.log(this.total)
+            },
+
+            statusName(st) {
+                if (st === 0) {
+                    return "未付款"
+                } else if (st === 1) {
+                    return "已付款"
+                } else if (st === 2) {
+                    return "已送达"
+                } else {
+                    return null
+                }
+            },
+
+            getDetail(id) {
+                console.log(id)
+                // TODO 链接数据库
+                this.status = 0
+                setTimeout(() => {
+                    this.status = 4
+                }, 300)
             }
         }
     }
