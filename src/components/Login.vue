@@ -29,6 +29,7 @@
 
     export default {
         name: "Login",
+        props: {},
         data() {
             return {
                 onLogin: true,
@@ -45,6 +46,7 @@
                     return
                 }
                 // TODO 登录
+                this.$emit('login', {id: 1, admin: false})
             },
 
             register() {
@@ -53,6 +55,7 @@
                     return
                 }
                 // TODO 注册
+                this.$emit('login', {id: 1, admin: false})
             }
         }
     }

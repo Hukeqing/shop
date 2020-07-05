@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <Login v-if="status===0"></Login>
+        <Login v-if="status===0" v-on:login="login"></Login>
         <Customer v-if="status === 1"></Customer>
     </div>
 </template>
@@ -22,8 +22,23 @@
             return {
                 /**
                  * 0 for login and register
+                 * 1 for  customer
                  */
-                status: 1
+                status: 0,
+                userId: 0,
+                admin: false
+            }
+        },
+
+        methods: {
+            login(user) {
+                this.userId = user.id;
+                this.admin = user.admin
+                if (this.admin) {
+                    this.status = 2
+                } else {
+                    this.status = 1;
+                }
             }
         }
     }

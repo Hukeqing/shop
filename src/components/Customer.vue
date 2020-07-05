@@ -17,6 +17,7 @@
             <!--商店-->
             <el-main v-if="status === 1">
                 <div class="background">
+
                     <div v-for="(o, index) in goods" :key="index">
                         <transition name="fade" appear>
                             <div class="item" v-bind:class="{has: curSelect[index] > 0, outOff: o.inventory === 0}">
@@ -36,7 +37,14 @@
                             </div>
                         </transition>
                     </div>
+
                 </div>
+
+                <!--<el-button-group>-->
+                <!--<el-button type="primary" icon="el-icon-arrow-left">上一页</el-button>-->
+                <!--<el-button type="primary">下一页<i class="el-icon-arrow-right el-icon&#45;&#45;right"></i></el-button>-->
+                <!--</el-button-group>-->
+
                 <h1>总计：{{total}}</h1>
                 <el-button type="primary" round :disabled="total <= 0">加入购物车</el-button>
                 <el-button type="danger" round :disabled="total <= 0">直接购买</el-button>
@@ -44,10 +52,32 @@
         </transition>
         <transition name="el-fade-in-linear">
             <!--购物车-->
-            <el-main>
+            <el-main v-if="status === 2">
                 <div class="background">
 
+                    <div v-for="(o, index) in cart" :key="index">
+                        <transition name="fade" appear>
+                            <div class="item"
+                                 v-on:click="setSelect(index)"
+                                 v-bind:class="{has: curSelect[index] === 1}">
+                                <!--<p>No.{{o.id}} </p>-->
+                                <h1>{{goods[o.gid].name}}</h1>
+                                <!--suppress HtmlUnknownTarget -->
+                                <img :src="goods[o.gid].img" alt="Image">
+                                <div style="height: 20px">
+                                    <el-tag v-for="t in goods[o.gid].tag" :key="t" class="tag">{{tags[t]}}</el-tag>
+                                </div>
+
+                                <h2>数量：{{o.count}}</h2>
+                                <p>价格：{{goods[o.gid].price * o.count}}</p>
+                            </div>
+                        </transition>
+                    </div>
+
                 </div>
+                <h1>总计：{{total}}</h1>
+                <el-button type="primary" round :disabled="total <= 0">从购物车移除</el-button>
+                <el-button type="danger" round :disabled="total <= 0">直接购买</el-button>
             </el-main>
         </transition>
         <transition name="el-fade-in-linear">
@@ -61,6 +91,8 @@
 </template>
 
 <script>
+    import Vue from 'vue'
+
     export default {
         name: "Customer",
 
@@ -77,7 +109,11 @@
                     {id: 4, name: 'd', tag: [], price: 13, img: require("../assets/logo.png"), inventory: 5},
                 ],
                 curSelect: [],
-                cart: [],
+                cart: [
+                    {id: 1, gid: 1, count: 10},
+                    {id: 2, gid: 2, count: 3},
+                    {id: 3, gid: 3, count: 14}
+                ],
                 order: []
             }
         },
@@ -89,16 +125,26 @@
         computed: {
             total() {
                 let sum = 0;
-                for (let i = 0; i < this.curSelect.length; ++i) {
-                    sum += this.curSelect[i] == null ? 0 : this.curSelect[i] * this.goods[i].price;
+                if (this.status === 1) {
+                    for (let i = 0; i < this.curSelect.length; ++i) {
+                        sum += this.curSelect[i] == null ? 0 : this.curSelect[i] * this.goods[i].price;
+                    }
+                } else if (this.status === 2) {
+                    for (let i = 0; i < this.cart.length; ++i) {
+                        sum += this.curSelect[i] === 1 ? this.cart[i].count * this.goods[this.cart[i].gid].price : 0;
+                    }
                 }
                 return sum;
-            }
+            },
         },
 
         methods: {
             changeSelect(index) {
-                this.status = parseInt(index)
+                this.status = 0
+                this.curSelect = []
+                setTimeout(() => {
+                    this.status = parseInt(index)
+                }, 300);
             },
 
             addToCart() {
@@ -107,6 +153,11 @@
 
             makeOrder() {
                 // TODO 制作订单
+            },
+
+            setSelect(index) {
+                Vue.set(this.curSelect, index, this.curSelect[index] === 1 ? 0 : 1);
+                console.log(this.total)
             }
         }
     }
