@@ -40,18 +40,18 @@
 
         <el-dialog title="商品信息" :visible.sync="newGoodVisible">
             <transition name="fade" appear>
-                <el-form :model="goods[curSelect]">
+                <el-form :model="goods[curSelect - 1]">
                     <el-form-item label="名称">
-                        <el-input v-model="goods[curSelect].name" style="width: 400px"></el-input>
+                        <el-input v-model="goods[curSelect - 1].name" style="width: 400px"></el-input>
                     </el-form-item>
                     <el-form-item label="标签">
-                        <el-select v-model="goods[curSelect].tag" multiple clearable placeholder="请选择"
+                        <el-select v-model="goods[curSelect - 1].tag" multiple clearable placeholder="请选择"
                                    style="width: 400px">
                             <el-option
                                     v-for="item in tags"
                                     :key="item.id"
                                     :label="item.tag"
-                                    :value="item.id">
+                                    :value="item.id - 1">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -63,21 +63,22 @@
                                 :on-success="handleAvatarSuccess"
                                 :before-upload="beforeAvatarUpload">
                             <!--suppress HtmlUnknownTarget -->
-                            <img v-if="goods[curSelect].img" :src="goods[curSelect].img" class="avatar" alt="图标">
+                            <img v-if="goods[curSelect - 1].img" :src="goods[curSelect - 1].img" class="avatar"
+                                 alt="图标">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </el-form-item>
                     <el-form-item label="售价">
-                        <el-input-number v-model="goods[curSelect].price"
+                        <el-input-number v-model="goods[curSelect - 1].price"
                                          :precision="2"
                                          :step="0.1"></el-input-number>
                     </el-form-item>
                 </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="newGoodVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="newGoodVisible = false">确 定</el-button>
-                </div>
             </transition>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="newGoodVisible = false">取 消</el-button>
+                <el-button type="primary" @click="newGoodVisible = false">确 定</el-button>
+            </div>
         </el-dialog>
     </div>
 </template>

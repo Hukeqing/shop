@@ -48,9 +48,16 @@
         methods: {
             changeSelect(index) {
                 this.status = 0
-                // TODO 链接数据库
                 setTimeout(() => {
                     this.status = parseInt(index)
+                }, 300);
+            },
+
+            flush() {
+                let lastStatus = this.status
+                this.status = 0
+                setTimeout(() => {
+                    this.status = parseInt(lastStatus)
                 }, 300);
             },
         }

@@ -5,8 +5,15 @@
                 <div v-for="tag in tags" :key="tag.id">
                     <transition name="fade" appear>
                         <div class="item round-small">
-                            <el-tag class="tag">{{tag.tag}}</el-tag>
-                            <el-button type="mini" round>{{tagFunc(tag.work)}}</el-button>
+                            <!--<el-tag class="tag">{{tag.tag}}</el-tag>-->
+                            <el-input v-model="tag.tag" placeholder="请输入内容" size="mini" style="width: 100px"></el-input>
+                            <el-switch
+                                    style="margin-left: 10px"
+                                    v-model="tag.work"
+                                    active-color="#13ce66"
+                                    inactive-color="#ff4949"
+                                    v-on:change="changeTag(tag.id)">
+                            </el-switch>
                         </div>
                     </transition>
                 </div>
@@ -41,6 +48,18 @@
             }
         },
 
+        created() {
+            fetch('http://119.3.172.223/vue/shopAPI/tags.php').then(response => response.json()).then(json => {
+                if (json.errorCode !== 0) {
+                    this.$message.error('系统异常，请联系管理员')
+                    return
+                }
+                this.tags = json.data
+            }).catch(() => {
+                this.$message.error('网络异常')
+            })
+        },
+
         methods: {
             tagFunc(work) {
                 if (work) {
@@ -49,6 +68,20 @@
                     return "恢复"
                 }
             },
+
+            changeTag(index) {
+                fetch('http://119.3.172.223/vue/shopAPI/tagChange.php?id=' + index +
+                    '&status=' + (this.tags[index - 1].work ? 1 : 0))
+                    .then(response => response.json()).then(json => {
+                    if (json.errorCode !== 0) {
+                        this.$message.error('系统异常，请联系管理员')
+                        return
+                    }
+                    this.$message.success('更新已保存')
+                }).catch(() => {
+                    this.$message.error('网络异常')
+                })
+            }
         }
     }
 </script>
