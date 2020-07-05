@@ -21,7 +21,7 @@
 
                                 <p>价格：{{o.price}}</p>
                                 <el-button type="primary" round
-                                           v-on:click="curSelect = o.id - 1; newGoodVisible = true">修改信息
+                                           v-on:click="curSelect = o.id; newGoodVisible = true">修改信息
                                 </el-button>
                                 <!--</el-card>-->
                             </div>
@@ -51,7 +51,7 @@
                                     v-for="item in tags"
                                     :key="item.id"
                                     :label="item.tag"
-                                    :value="item.id - 1">
+                                    :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item>

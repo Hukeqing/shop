@@ -14,9 +14,9 @@
             </el-menu>
         </el-aside>
         <el-main>
-            <Shop v-if="status === 1" :goods="goods" :tags="tags" :user-id="userId"></Shop>
-            <Cart v-if="status === 2" :goods="goods" :tags="tags" :user-id="userId" v-on:flush="flush"></Cart>
-            <Order v-if="status === 3" :goods="goods" :tags="tags"></Order>
+            <Shop v-if="status === 1" :user-id="userId" v-on:flush="flush"></Shop>
+            <Cart v-if="status === 2" :user-id="userId" v-on:flush="flush"></Cart>
+            <Order v-if="status === 3" :user-id="userId" v-on:flush="flush"></Order>
         </el-main>
     </el-container>
 </template>
@@ -40,17 +40,8 @@
         data() {
             return {
                 status: 0,
-                tags: [
-                    {id: 1, tag: 'abc', work: true},
-                    {id: 2, tag: 'def', work: true},
-                    {id: 3, tag: 'aaa', work: false}
-                ],
-                goods: [
-                    {id: 1, name: 'a', tag: [0, 2], price: 10, img: require("../assets/logo.png"), inventory: 100},
-                    {id: 2, name: 'b', tag: [1, 2], price: 15, img: require("../assets/logo.png"), inventory: 10},
-                    {id: 3, name: 'c', tag: [0, 1, 2], price: 1, img: require("../assets/logo.png"), inventory: 0},
-                    {id: 4, name: 'd', tag: [2], price: 13, img: require("../assets/logo.png"), inventory: 5},
-                ]
+                tags: [],
+                goods: []
             }
         },
 

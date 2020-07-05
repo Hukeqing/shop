@@ -51,10 +51,9 @@
 
         methods: {
             login(user) {
-                this.userId = parseInt(user.id)
+                this.userId = user.id
                 this.admin = user.admin
                 this.userName = user.user
-                console.log(this.admin)
                 if (this.admin === true) {
                     this.status = 2
                     this.$message.success('欢迎，管理员 ' + user.user)

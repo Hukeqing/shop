@@ -10,19 +10,19 @@
                              v-on:click="setSelect(index)"
                              v-bind:class="{has: curSelect[index] === 1}">
                             <!--<p>No.{{o.id}} </p>-->
-                            <h1>{{goods[o.gid].name}}</h1>
+                            <h1>{{goods[o.gid - 1].name}}</h1>
                             <!--suppress HtmlUnknownTarget -->
-                            <img :src="goods[o.gid].img" alt="Image">
+                            <img :src="goods[o.gid - 1].img" alt="Image">
                             <div style="height: 20px">
-                                <template v-for="t in goods[o.gid].tag">
-                                    <el-tag v-if="tags[t].work===true" :key="t" class="tag">
-                                        {{tags[t].tag}}
+                                <template v-for="t in goods[o.gid - 1].tag">
+                                    <el-tag v-if="tags[t - 1].work===true" :key="t" class="tag">
+                                        {{tags[t - 1].tag}}
                                     </el-tag>
                                 </template>
                             </div>
 
                             <h2>数量：{{o.count}}</h2>
-                            <p>价格：{{goods[o.gid].price * o.count}}</p>
+                            <p>价格：{{(goods[o.gid - 1].price * o.count).toFixed(2)}}</p>
                         </div>
                     </transition>
                 </div>
@@ -44,37 +44,57 @@
         data() {
             return {
                 curSelect: [],
-                cart: [
-                    {id: 1, gid: 1, count: 10},
-                    {id: 2, gid: 2, count: 3},
-                    {id: 3, gid: 3, count: 14}
-                ],
+                cart: [],
+                tags: [],
+                goods: [],
             }
         },
 
         created() {
-            fetch('http://119.3.172.223/vue/shopAPI/cart.php').then(response => response.json()).then(json => {
+            fetch('http://119.3.172.223/vue/shopAPI/tags.php').then(response => response.json()).then(json => {
                 if (json.errorCode !== 0) {
                     this.$message.error('系统异常，请联系管理员')
                     return
                 }
-                this.cart = json.data
+                this.tags = json.data
+
+                fetch('http://119.3.172.223/vue/shopAPI/goods.php').then(response => response.json()).then(json => {
+                    if (json.errorCode !== 0) {
+                        this.$message.error('系统异常，请联系管理员')
+                        return
+                    }
+                    this.goods = json.data
+
+                    fetch('http://119.3.172.223/vue/shopAPI/cart.php?user=' + this.userId).then(response => response.json()).then(json => {
+                        if (json.errorCode !== 0) {
+                            this.$message.error('系统异常，请联系管理员')
+                            return
+                        }
+                        this.cart = json.data
+                    }).catch(() => {
+                        this.$message.error('网络异常')
+                    })
+
+                }).catch(() => {
+                    this.$message.error('网络异常')
+                })
+
             }).catch(() => {
                 this.$message.error('网络异常')
             })
+
+
         },
 
         props: {
             userId: Number,
-            tags: Array,
-            goods: Array,
         },
 
         computed: {
             total() {
                 let sum = 0;
                 for (let i = 0; i < this.cart.length; ++i) {
-                    sum += this.curSelect[i] === 1 ? this.cart[i].count * this.goods[this.cart[i].gid].price : 0;
+                    sum += this.curSelect[i] === 1 ? this.cart[i].count * this.goods[this.cart[i].gid - 1].price : 0;
                 }
                 return sum;
             }
@@ -83,7 +103,6 @@
         methods: {
             setSelect(index) {
                 Vue.set(this.curSelect, index, this.curSelect[index] === 1 ? 0 : 1);
-                console.log(this.total)
             },
 
             removeItem() {
@@ -97,17 +116,15 @@
                             }
                             this.$notify({
                                 title: '成功移除',
-                                message: this.goods[this.cart[i].gid].name + '被移出购物车'
+                                message: this.goods[this.cart[i].gid - 1].name + '被移出购物车'
                             });
-                            if (i === this.curSelect.length - 1) {
-                                this.$emit('flush')
-                                this.$message.success('移出购物车成功');
-                            }
                         }).catch(() => {
                             this.$message.error('网络异常')
                         })
                     }
                 }
+                this.$emit('flush')
+                this.$message.success('移出购物车成功');
             },
 
             makeOrder() {
@@ -121,9 +138,14 @@
                     let removeUrl = 'http://119.3.172.223/vue/shopAPI/removeCart.php?id='
                     for (let i = 0; i < this.curSelect.length; ++i) {
                         if (this.curSelect[i] === 1) {
-                            fetch(url + '&id=' + this.cart[i].gid + '&cnt=' + this.cart[i].count)
+                            fetch(url + '&id=' + this.cart[i].gid +
+                                '&cnt=' + this.cart[i].count +
+                                '&cost=' + (this.cart[i].count * this.goods[i].price))
                                 .then(response => response.json()).then(json => {
-                                if (json.errorCode !== 0) {
+                                if (json.errorCode === 1) {
+                                    this.$message.error('仓储不足')
+                                    return
+                                } else if (json.errorCode !== 0) {
                                     this.$message.error('系统异常，请联系管理员')
                                     return
                                 }
@@ -135,12 +157,8 @@
                                     }
                                     this.$notify({
                                         title: '成功添加到订单',
-                                        message: this.cart[i].count + '件' + this.goods[this.cart[i].gid].name + '已经加入到你的订单中'
+                                        message: this.cart[i].count + '件' + this.goods[this.cart[i].gid - 1].name + '已经加入到你的订单中'
                                     });
-                                    if (i === this.curSelect.length - 1) {
-                                        this.$message.success('订单创建成功，编号：' + json.id);
-                                        this.$emit('flush')
-                                    }
                                 }).catch(() => {
                                     this.$message.error('网络异常')
                                 })
@@ -150,6 +168,8 @@
                             })
                         }
                     }
+                    this.$message.success('订单创建成功，编号：' + json.id);
+                    this.$emit('flush')
                 }).catch(() => {
                     this.$message.error('网络异常')
                 })
