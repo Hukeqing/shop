@@ -3,6 +3,13 @@
     display: flex;
     display: -webkit-flex;
     flex-wrap: wrap;
+    overflow: hidden;
+    padding: 40px 40px;
+    transition: 1s;
+    /*justify-content: center;*/
+}
+
+.background-dialog {
     justify-content: center;
 }
 
@@ -47,7 +54,16 @@
     transition: 0.5s;
 }
 
+.wide {
+    width: 100%;
+}
+
 img {
+    width: 100px;
+    height: 100px;
+}
+
+.good-img {
     width: 100px;
     height: 100px;
 }

@@ -4,12 +4,12 @@
         <div>
             <div class="background">
                 <div v-for="(o, index) in goods" :key="index">
-                    <transition name="fade" appear>
+                    <transition name="fade" appear v-if="clock >= index">
                         <div class="item round" v-bind:class="{has: curSelect[index] > 0, outOff: o.inventory === 0}">
                             <!--<p>No.{{o.id}} </p>-->
                             <h1>{{decodeURIComponent(o.name)}}</h1>
                             <!--suppress HtmlUnknownTarget -->
-                            <img :src="o.img" alt="暂无图片">
+                            <el-image :src="o.img" alt="暂无图片" class="good-img" lazy></el-image>
                             <div style="height: 20px">
                                 <template v-for="t in o.tag">
                                     <el-tag v-if="tags[t - 1].work===true" :key="t" class="tag">
@@ -52,6 +52,8 @@
 
         data() {
             return {
+                clock: 0,
+                intervalId: null,
                 curSelect: [],
                 tags: [],
                 goods: [],
@@ -71,6 +73,13 @@
                         return
                     }
                     this.goods = json.data
+
+                    this.intervalId = setInterval(() => {
+                        this.clock++
+                        if (this.clock > this.goods.length + 1)
+                            clearInterval(this.intervalId)
+                    }, 200);
+
                 }).catch(() => {
                     this.$message.error('网络异常')
                 })

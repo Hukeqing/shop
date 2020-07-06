@@ -3,7 +3,7 @@
         <div>
             <div class="background">
                 <div v-for="tag in tags" :key="tag.id">
-                    <transition name="fade" appear>
+                    <transition name="fade" v-if="clock >= tag.id" appear>
                         <div class="item round-small">
                             <!--<el-tag class="tag">{{tag.tag}}</el-tag>-->
                             <el-input v-model="tag.tag" placeholder="请输入内容" size="mini" style="width: 100px"
@@ -40,6 +40,8 @@
 
         data() {
             return {
+                clock: 1,
+                intervalId: null,
                 tags: [
                     {id: 1, tag: 'abc', work: true},
                     {id: 2, tag: 'def', work: true},
@@ -56,6 +58,13 @@
                     return
                 }
                 this.tags = json.data
+
+                this.intervalId = setInterval(() => {
+                    this.clock++
+                    if (this.clock > this.tags.length + 1)
+                        clearInterval(this.intervalId)
+                }, 200);
+
             }).catch(() => {
                 this.$message.error('网络异常')
             })

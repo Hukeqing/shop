@@ -2,17 +2,30 @@
     <transition name="el-fade-in-linear">
         <!--订单-->
         <div>
-            <div class="background">
-                <div v-for="(o, index) in order" :key="index">
-                    <transition name="fade" appear>
+            <div class="background" v-if="order.length !== 0">
+                <div v-for="(o, index) in order" :key="index" v-bind:class="{'wide': o.id === -1}">
+                    <transition name="fade" v-if="clock >= index && o.id !== -1" appear>
                         <div class="item round-small">
-                            <h1>{{o.time}}</h1>
+                            <h1>编号：{{o.id}}</h1>
+                            <h3>时间：{{o.time}}</h3>
+                            <!--suppress JSUnresolvedVariable -->
                             <h2>费用：{{o.totalCost}}</h2>
                             <p>状态：{{statusName(o.status)}}</p>
                             <el-button type="primary" round v-on:click="getDetail(o)">详情</el-button>
                         </div>
                     </transition>
+                    <transition name="fade" v-if="clock >= index && o.id === -1" appear>
+                        <el-alert
+                                type="success"
+                                center
+                                :closable="false">
+                            <h1>{{o.time}}</h1>
+                        </el-alert>
+                    </transition>
                 </div>
+            </div>
+            <div v-else style="justify-content: center;">
+                <h1 style="font-size: 50px; text-align: center;">空空如也</h1>
             </div>
 
             <el-dialog title="订单" :visible.sync="showDialog">
@@ -21,13 +34,13 @@
                     <h1>
                         订单编号：{{detail.id}}
                     </h1>
-                    <div class="background">
+                    <div class="background background-dialog">
                         <div v-for="(o, index) in detail.data" :key="index">
                             <transition name="fade" appear>
                                 <div class="item round">
                                     <h1>{{decodeURIComponent(goods[o.gid - 1].name)}}</h1>
                                     <!--suppress HtmlUnknownTarget -->
-                                    <img :src="goods[o.gid - 1].img" alt="暂无图片">
+                                    <el-image :src="goods[o.gid - 1].img" class="good-img" alt="暂无图片" lazy></el-image>
                                     <div style="height: 20px">
                                         <template v-for="t in goods[o.gid - 1].tag">
                                             <el-tag v-if="tags[t - 1].work===true" :key="t" class="tag">
@@ -37,7 +50,8 @@
                                     </div>
 
                                     <h2>数量：{{o.count}}</h2>
-                                    <p>价格：{{o.cost}}</p>
+                                    <!--suppress JSUnresolvedVariable -->
+                                    <p>总花费：{{o.cost}}</p>
                                 </div>
                             </transition>
                         </div>
@@ -51,11 +65,15 @@
 </template>
 
 <script>
+    import {str2int} from "@/static/Main";
+
     export default {
         name: "OrderManager",
 
         data() {
             return {
+                clock: 0,
+                intervalId: null,
                 tags: [],
                 goods: [],
                 order: [],
@@ -85,7 +103,32 @@
                             this.$message.error('系统异常，请联系管理员')
                             return
                         }
+                        json.data.reverse()
                         this.order = json.data
+
+                        let timeStamp = [0, 86400000, 604800000, 2592000000, 9223372036854775807];
+                        let flag = [false, false, false, false]
+                        let str = ['24小时内', '最近7天', '最近一个月', '更早之前']
+                        let curTime = parseInt(new Date().getTime());
+
+                        for (let i = 0; i < this.order.length; ++i) {
+                            for (let j = 1; j < timeStamp.length; ++j) {
+                                if (curTime - str2int(this.order[i].time) < timeStamp[j]) {
+                                    if (!flag[j - 1]) {
+                                        this.order.splice(i, 0, {id: -1, time: str[j - 1]})
+                                        flag[j - 1] = true
+                                    }
+                                    break
+                                }
+                            }
+                        }
+
+                        this.intervalId = setInterval(() => {
+                            this.clock++
+                            if (this.clock > this.order.length + 1)
+                                clearInterval(this.intervalId)
+                        }, 200);
+
                     }).catch(() => {
                         this.$message.error('网络异常')
                     })

@@ -2,17 +2,16 @@
     <transition name="el-fade-in-linear">
         <!--购物车-->
         <div>
-            <div class="background">
-
+            <div class="background" v-if="cart.length !== 0">
                 <div v-for="(o, index) in cart" :key="index">
-                    <transition name="fade" appear>
+                    <transition name="fade" v-if="clock >= index" appear>
                         <div class="item round"
                              v-on:click="setSelect(index)"
                              v-bind:class="{has: curSelect[index] === 1}">
                             <!--<p>No.{{o.id}} </p>-->
                             <h1>{{decodeURIComponent(goods[o.gid - 1].name)}}</h1>
                             <!--suppress HtmlUnknownTarget -->
-                            <img :src="goods[o.gid - 1].img" alt="暂无图片">
+                            <el-image :src="goods[o.gid - 1].img" alt="暂无图片" class="good-img" lazy></el-image>
                             <div style="height: 20px">
                                 <template v-for="t in goods[o.gid - 1].tag">
                                     <el-tag v-if="tags[t - 1].work===true" :key="t" class="tag">
@@ -26,7 +25,9 @@
                         </div>
                     </transition>
                 </div>
-
+            </div>
+            <div v-else style="justify-content: center;">
+                <h1 style="font-size: 50px; text-align: center;">空空如也</h1>
             </div>
             <h1>总计：{{total}}</h1>
             <el-button type="primary" round :disabled="total <= 0" v-on:click="removeItem()">从购物车移除</el-button>
@@ -43,6 +44,8 @@
 
         data() {
             return {
+                clock: 0,
+                intervalId: null,
                 curSelect: [],
                 cart: [],
                 tags: [],
@@ -71,6 +74,13 @@
                             return
                         }
                         this.cart = json.data
+
+                        this.intervalId = setInterval(() => {
+                            this.clock++
+                            if (this.clock > this.cart.length + 1)
+                                clearInterval(this.intervalId)
+                        }, 200);
+
                     }).catch(() => {
                         this.$message.error('网络异常')
                     })
