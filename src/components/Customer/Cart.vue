@@ -3,7 +3,28 @@
         <!--购物车-->
         <div>
             <div class="background" v-if="cart.length !== 0">
-                <div v-for="(o, index) in cart" :key="index">
+                <el-input
+                        style="width: 47%; margin-right: 3%; margin-bottom: 30px"
+                        placeholder="搜索商品关键字"
+                        v-model="searchStr"
+                        prefix-icon="el-icon-search"
+                        v-on:input="search"
+                        clearable>
+                </el-input>
+                <el-select v-model="searchTag" multiple clearable placeholder="标签过滤"
+                           style="width: 47%; margin-left: 3%; margin-bottom: 30px"
+                           v-on:change="search">
+                    <template v-for="item in tags">
+                        <el-option
+                                v-if="item.work"
+                                :key="item.id"
+                                :label="item.tag"
+                                :value="item.id">
+                        </el-option>
+                    </template>
+                </el-select>
+                <div v-for="(o, index) in cart" :key="index" class="card"
+                     v-show="!searchMode || searchRes[o.gid - 1] === true">
                     <transition name="fade" v-if="clock >= index" appear>
                         <div class="item round"
                              v-on:click="setSelect(index)"
@@ -38,6 +59,7 @@
 
 <script>
     import Vue from "vue";
+    import {search} from "@/static/Main";
 
     export default {
         name: "Cart",
@@ -46,6 +68,12 @@
             return {
                 clock: 0,
                 intervalId: null,
+
+                searchStr: '',
+                searchTag: [],
+                searchRes: [],
+                searchMode: false,
+
                 curSelect: [],
                 cart: [],
                 tags: [],
@@ -183,6 +211,15 @@
                 }).catch(() => {
                     this.$message.error('网络异常')
                 })
+            },
+
+            search() {
+                if (this.searchStr.length === 0 && this.searchTag.length === 0) {
+                    this.searchMode = false
+                    return
+                }
+                this.searchMode = true
+                this.searchRes = search(this.goods, this.searchStr, this.searchTag)
             }
         }
     }

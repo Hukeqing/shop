@@ -2,7 +2,28 @@
     <transition name="el-fade-in-linear">
         <div>
             <div class="background">
-                <div v-for="(o, index) in goods" :key="o.id">
+                <el-input
+                        style="width: 47%; margin-right: 3%; margin-bottom: 30px"
+                        placeholder="搜索商品关键字"
+                        v-model="searchStr"
+                        prefix-icon="el-icon-search"
+                        v-on:input="search"
+                        clearable>
+                </el-input>
+                <el-select v-model="searchTag" multiple clearable placeholder="标签过滤"
+                           style="width: 47%; margin-left: 3%; margin-bottom: 30px"
+                           v-on:change="search">
+                    <template v-for="item in tags">
+                        <el-option
+                                v-if="item.work"
+                                :key="item.id"
+                                :label="item.tag"
+                                :value="item.id">
+                        </el-option>
+                    </template>
+                </el-select>
+                <div v-for="(o, index) in goods" :key="o.id" class="card"
+                     v-show="!searchMode || searchRes[index] === true">
                     <transition name="fade" v-if="clock >= o.id" appear>
                         <div class="item round" v-bind:class="{has: curUpdate[index] > 0}">
                             <!--<el-card class="round">-->
@@ -43,6 +64,8 @@
 </template>
 
 <script>
+    import {search} from "@/static/Main";
+
     export default {
         name: "StockManager",
 
@@ -50,6 +73,12 @@
             return {
                 clock: 1,
                 intervalId: null,
+
+                searchStr: '',
+                searchTag: [],
+                searchRes: [],
+                searchMode: false,
+
                 tags: [],
                 goods: [],
                 curUpdate: []
@@ -104,6 +133,15 @@
                         })
                     }
                 }
+            },
+
+            search() {
+                if (this.searchStr.length === 0 && this.searchTag.length === 0) {
+                    this.searchMode = false
+                    return
+                }
+                this.searchMode = true
+                this.searchRes = search(this.goods, this.searchStr, this.searchTag)
             }
         }
     }

@@ -4,6 +4,24 @@ function str2int(date) {
     return new Date(date).getTime();
 }
 
+
+function search(goods, str, tag) {
+    let res = []
+    for (let i = 0; i < goods.length; ++i) {
+        res[i] = false
+        for (let j = 0; j < goods[i].tag.length; ++j) {
+            if (tag.indexOf(goods[i].tag[j]) !== -1) {
+                res[i] = true
+                break
+            }
+        }
+        if (str.length > 0 && decodeURIComponent(goods[i].name).indexOf(str) !== -1)
+            res[i] = true
+    }
+    return res
+}
+
 export {
-    str2int
+    str2int,
+    search
 }

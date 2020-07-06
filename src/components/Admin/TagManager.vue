@@ -2,12 +2,17 @@
     <transition name="el-fade-in-linear">
         <div>
             <div class="background">
-                <div v-for="tag in tags" :key="tag.id">
+                <div v-for="tag in tags" :key="tag.id" class="card">
                     <transition name="fade" v-if="clock >= tag.id" appear>
                         <div class="item round-small">
                             <!--<el-tag class="tag">{{tag.tag}}</el-tag>-->
-                            <el-input v-model="tag.tag" placeholder="请输入内容" size="mini" style="width: 100px"
-                                      v-on:change="changeTagName(tag.id)"></el-input>
+                            <el-input
+                                    v-model="tag.tag"
+                                    placeholder="请输入内容"
+                                    size="mini"
+                                    style="width: 100px"
+                                    v-on:change="changeTagName(tag.id)">
+                            </el-input>
                             <el-switch
                                     style="margin-left: 10px"
                                     v-model="tag.work"

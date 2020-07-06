@@ -1,51 +1,81 @@
 <template>
-    <transition name="el-fade-in-linear">
-        <!--商店-->
-        <div>
-            <div class="background">
-                <div v-for="(o, index) in goods" :key="index">
-                    <transition name="fade" appear v-if="clock >= index">
-                        <div class="item round" v-bind:class="{has: curSelect[index] > 0, outOff: o.inventory === 0}">
-                            <!--<p>No.{{o.id}} </p>-->
-                            <h1>{{decodeURIComponent(o.name)}}</h1>
-                            <!--suppress HtmlUnknownTarget -->
-                            <el-image :src="o.img" alt="暂无图片" class="good-img" lazy></el-image>
-                            <div style="height: 20px">
-                                <template v-for="t in o.tag">
-                                    <el-tag v-if="tags[t - 1].work===true" :key="t" class="tag">
-                                        {{tags[t - 1].tag}}
-                                    </el-tag>
-                                </template>
-                            </div>
+    <el-container>
+        <el-main>
+            <transition name="el-fade-in-linear">
+                <!--商店-->
+                <div>
+                    <div class="background" v-if="goods.length !== 0">
+                        <el-input
+                                style="width: 47%; margin-right: 3%; margin-bottom: 30px"
+                                placeholder="搜索商品关键字"
+                                v-model="searchStr"
+                                prefix-icon="el-icon-search"
+                                v-on:input="search"
+                                clearable>
+                        </el-input>
+                        <el-select v-model="searchTag" multiple clearable placeholder="标签过滤"
+                                   style="width: 47%; margin-left: 3%; margin-bottom: 30px"
+                                   v-on:change="search">
+                            <template v-for="item in tags">
+                                <el-option
+                                        v-if="item.work"
+                                        :key="item.id"
+                                        :label="item.tag"
+                                        :value="item.id">
+                                </el-option>
+                            </template>
+                        </el-select>
+                        <div v-for="(o, index) in goods" :key="index" class="card"
+                             v-show="!searchMode || searchRes[index] === true">
+                            <transition name="fade" appear v-if="clock >= index">
+                                <div class="item round"
+                                     v-bind:class="{has: curSelect[index] > 0, outOff: o.inventory === 0}">
+                                    <!--<p>No.{{o.id}} </p>-->
+                                    <h1>{{decodeURIComponent(o.name)}}</h1>
+                                    <!--suppress HtmlUnknownTarget -->
+                                    <el-image :src="o.img" alt="暂无图片" class="good-img" lazy></el-image>
+                                    <div style="height: 20px">
+                                        <template v-for="t in o.tag">
+                                            <el-tag v-if="tags[t - 1].work===true" :key="t" class="tag">
+                                                {{tags[t - 1].tag}}
+                                            </el-tag>
+                                        </template>
+                                    </div>
 
-                            <h3 v-if="o.inventory > 0">剩余数量：{{o.inventory}}</h3>
-                            <h2 v-else>无库存剩余</h2>
-                            <p>价格：{{o.price}}</p>
-                            <p>
-                                购买：
-                                <el-input-number v-model="curSelect[index]" :min="0" :max="o.inventory"
-                                                 label="选购数量"></el-input-number>
-                            </p>
+                                    <h3 v-if="o.inventory > 0">剩余数量：{{o.inventory}}</h3>
+                                    <h2 v-else>无库存剩余</h2>
+                                    <p>价格：{{o.price}}</p>
+                                    <p>
+                                        购买：
+                                        <el-input-number v-model="curSelect[index]" :min="0" :max="o.inventory"
+                                                         label="选购数量"></el-input-number>
+                                    </p>
+                                </div>
+                            </transition>
                         </div>
-                    </transition>
+                        <!--<el-button-group>-->
+                        <!--<el-button type="primary" icon="el-icon-arrow-left">上一页</el-button>-->
+                        <!--<el-button type="primary">下一页<i class="el-icon-arrow-right el-icon&#45;&#45;right"></i></el-button>-->
+                        <!--</el-button-group>-->
+                    </div>
+
+                    <div v-else style="justify-content: center;">
+                        <h1 style="font-size: 50px; text-align: center;">空空如也</h1>
+                    </div>
                 </div>
-
-            </div>
-
-            <!--<el-button-group>-->
-            <!--<el-button type="primary" icon="el-icon-arrow-left">上一页</el-button>-->
-            <!--<el-button type="primary">下一页<i class="el-icon-arrow-right el-icon&#45;&#45;right"></i></el-button>-->
-            <!--</el-button-group>-->
-
+            </transition>
+        </el-main>
+        <el-footer height="100px">
             <h1>总计：{{total}}</h1>
             <el-button type="primary" round :disabled="total <= 0" v-on:click="addToCart()">加入购物车</el-button>
             <el-button type="danger" round :disabled="total <= 0" v-on:click="makeOrder()">直接购买</el-button>
-        </div>
-    </transition>
+        </el-footer>
+    </el-container>
 </template>
 
 <script>
     import Vue from 'vue'
+    import {search} from "@/static/Main";
 
     export default {
         name: "shop",
@@ -54,6 +84,12 @@
             return {
                 clock: 0,
                 intervalId: null,
+
+                searchStr: '',
+                searchTag: [],
+                searchRes: [],
+                searchMode: false,
+
                 curSelect: [],
                 tags: [],
                 goods: [],
@@ -163,8 +199,17 @@
                 }).catch(() => {
                     this.$message.error('网络异常')
                 })
+            },
+
+            search() {
+                if (this.searchStr.length === 0 && this.searchTag.length === 0) {
+                    this.searchMode = false
+                    return
+                }
+                this.searchMode = true
+                this.searchRes = search(this.goods, this.searchStr, this.searchTag)
             }
-        }
+        },
     }
 </script>
 

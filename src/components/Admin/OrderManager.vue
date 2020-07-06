@@ -3,7 +3,8 @@
         <!--订单-->
         <div>
             <div class="background" v-if="order.length !== 0">
-                <div v-for="(o, index) in order" :key="index" v-bind:class="{'wide': o.id === -1}">
+                <div v-for="(o, index) in order" :key="index"
+                     v-bind:class="{'time-line': o.id === -1, 'card': o.id !== -1}">
                     <transition name="fade" v-if="clock >= index && o.id !== -1" appear>
                         <div class="item round-small">
                             <h1>编号：{{o.id}}</h1>
@@ -35,7 +36,7 @@
                         订单编号：{{detail.id}}
                     </h1>
                     <div class="background background-dialog">
-                        <div v-for="(o, index) in detail.data" :key="index">
+                        <div v-for="(o, index) in detail.data" :key="index" class="card">
                             <transition name="fade" appear>
                                 <div class="item round">
                                     <h1>{{decodeURIComponent(goods[o.gid - 1].name)}}</h1>

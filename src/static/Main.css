@@ -54,8 +54,17 @@
     transition: 0.5s;
 }
 
-.wide {
+.time-line {
     width: 100%;
+    z-index: 1;
+}
+
+.card {
+    z-index: 2;
+}
+
+.card:hover {
+    z-index: 3;
 }
 
 img {
