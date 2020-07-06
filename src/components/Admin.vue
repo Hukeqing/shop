@@ -17,10 +17,10 @@
             </el-menu>
         </el-aside>
         <el-main>
-            <TagManager v-if="status === 1"></TagManager>
-            <GoodManager v-if="status === 2"></GoodManager>
-            <StockManager v-if="status === 3"></StockManager>
-            <OrderManager v-if="status === 4"></OrderManager>
+            <TagManager v-if="status === 1" v-on:flush="flush"></TagManager>
+            <GoodManager v-if="status === 2" v-on:flush="flush"></GoodManager>
+            <StockManager v-if="status === 3" v-on:flush="flush"></StockManager>
+            <OrderManager v-if="status === 4" v-on:flush="flush"></OrderManager>
         </el-main>
     </el-container>
 </template>

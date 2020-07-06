@@ -26,9 +26,9 @@
                         <div v-for="(o, index) in detail.data" :key="index">
                             <transition name="fade" appear>
                                 <div class="item round">
-                                    <h1>{{goods[o.gid - 1].name}}</h1>
+                                    <h1>{{decodeURIComponent(goods[o.gid - 1].name)}}</h1>
                                     <!--suppress HtmlUnknownTarget -->
-                                    <img :src="goods[o.gid - 1].img" alt="Image">
+                                    <img :src="goods[o.gid - 1].img" alt="暂无图片">
                                     <div style="height: 20px">
                                         <template v-for="t in goods[o.gid - 1].tag">
                                             <el-tag v-if="tags[t - 1].work===true" :key="t" class="tag">
@@ -75,7 +75,7 @@
                 }
                 this.tags = json.data
 
-                fetch('http://119.3.172.223/vue/shopAPI/goods.php').then(response => response.json()).then(json => {
+                fetch('http://119.3.172.223/vue/shopAPI/goods/goods.php').then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return

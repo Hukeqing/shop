@@ -2,7 +2,7 @@
     <el-container>
         <el-header>
             <div v-if="status !== 0">
-                <el-avatar class="item header" v-bind:class="{headerAdmin: admin}">{{userName}}
+                <el-avatar class="item header" v-bind:class="{headerAdmin: admin}">{{decodeURIComponent(userName)}}
                 </el-avatar>
             </div>
         </el-header>
@@ -56,10 +56,10 @@
                 this.userName = user.user
                 if (this.admin === true) {
                     this.status = 2
-                    this.$message.success('欢迎，管理员 ' + user.user)
+                    this.$message.success('欢迎，管理员 ' + decodeURIComponent(user.user))
                 } else {
                     this.status = 1
-                    this.$message.success('欢迎，' + user.user)
+                    this.$message.success('欢迎，' + decodeURIComponent(user.user))
                 }
             }
         }

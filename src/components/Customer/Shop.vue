@@ -7,9 +7,9 @@
                     <transition name="fade" appear>
                         <div class="item round" v-bind:class="{has: curSelect[index] > 0, outOff: o.inventory === 0}">
                             <!--<p>No.{{o.id}} </p>-->
-                            <h1>{{o.name}}</h1>
+                            <h1>{{decodeURIComponent(o.name)}}</h1>
                             <!--suppress HtmlUnknownTarget -->
-                            <img :src="o.img" alt="Image">
+                            <img :src="o.img" alt="暂无图片">
                             <div style="height: 20px">
                                 <template v-for="t in o.tag">
                                     <el-tag v-if="tags[t - 1].work===true" :key="t" class="tag">
@@ -65,7 +65,7 @@
                     return
                 }
                 this.tags = json.data
-                fetch('http://119.3.172.223/vue/shopAPI/goods.php').then(response => response.json()).then(json => {
+                fetch('http://119.3.172.223/vue/shopAPI/goods/goods.php').then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return
@@ -77,7 +77,6 @@
             }).catch(() => {
                 this.$message.error('网络异常')
             })
-
         },
 
         props: {
@@ -108,7 +107,7 @@
 
                             this.$notify({
                                 title: '成功添加到购物车',
-                                message: this.curSelect[i] + '件' + this.goods[i].name + '已经加入到你的购物车'
+                                message: this.curSelect[i] + '件' + decodeURIComponent(this.goods[i].name) + '已经加入到你的购物车'
                             })
                             Vue.set(this.curSelect, i, 0)
                         }).catch(() => {
@@ -143,7 +142,7 @@
                                 }
                                 this.$notify({
                                     title: '成功添加到订单',
-                                    message: this.curSelect[i] + '件' + this.goods[i].name + '已经加入到你的订单中'
+                                    message: this.curSelect[i] + '件' + decodeURIComponent(this.goods[i].name) + '已经加入到你的订单中'
                                 });
                                 Vue.set(this.curSelect, i, 0)
                             }).catch(() => {

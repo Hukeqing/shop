@@ -46,7 +46,7 @@
         },
 
         created() {
-            fetch('http://119.3.172.223/vue/shopAPI/goods.php').then(response => response.json()).then(json => {
+            fetch('http://119.3.172.223/vue/shopAPI/goods/goods.php').then(response => response.json()).then(json => {
                 if (json.errorCode !== 0) {
                     this.$message.error('系统异常，请联系管理员')
                     return
