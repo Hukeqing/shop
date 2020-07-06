@@ -7,13 +7,19 @@
 }
 
 .item {
-    /*阴影效果*/
     filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090, direction=120, strength=4); /*ie*/
     -moz-box-shadow: 2px 2px 10px #909090; /*firefox*/
     -webkit-box-shadow: 2px 2px 10px #909090; /*safari或chrome*/
     box-shadow: 2px 2px 10px #909090; /*opera或ie9*/
 }
 
+.item:hover {
+    filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090, direction=120, strength=60); /*ie*/
+    -moz-box-shadow: 30px 30px 300px #909090; /*firefox*/
+    -webkit-box-shadow: 30px 30px 300px #909090; /*safari或chrome*/
+    box-shadow: 30px 30px 150px #909090; /*opera或ie9*/
+    transform: scale(1.2);
+}
 
 .round-small {
     width: 200px;
@@ -25,11 +31,11 @@
     -webkit-border-radius: 9px;
     -moz-border-radius: 9px;
     background-color: white;
-    transition: 1s;
+    transition: 0.5s;
 }
 
 .round {
-    width: 300px;
+    width: 250px;
     text-align: center;
     margin: 10px 10px 10px 10px;
     padding: 5px 5px 5px 5px;
@@ -38,7 +44,7 @@
     -webkit-border-radius: 9px;
     -moz-border-radius: 9px;
     background-color: white;
-    transition: 1s;
+    transition: 0.5s;
 }
 
 img {

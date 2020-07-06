@@ -116,7 +116,7 @@
                             }
                             this.$notify({
                                 title: '成功移除',
-                                message: this.goods[this.cart[i].gid - 1].name + '被移出购物车'
+                                message: decodeURIComponent(this.goods[this.cart[i].gid - 1].name) + '被移出购物车'
                             });
                         }).catch(() => {
                             this.$message.error('网络异常')
@@ -157,7 +157,7 @@
                                     }
                                     this.$notify({
                                         title: '成功添加到订单',
-                                        message: this.cart[i].count + '件' + this.goods[this.cart[i].gid - 1].name + '已经加入到你的订单中'
+                                        message: this.cart[i].count + '件' + decodeURIComponent(this.goods[this.cart[i].gid - 1].name) + '已经加入到你的订单中'
                                     });
                                 }).catch(() => {
                                     this.$message.error('网络异常')
