@@ -125,7 +125,6 @@
                         this.$message.error('系统异常，请联系管理员')
                         return
                     }
-                    this.$message.success('订单创建成功，编号：' + json.id);
                     url = 'http://119.3.172.223/vue/shopAPI/updateOrder.php?orderId=' + json.id
                     for (let i = 0; i < this.curSelect.length; ++i) {
                         if (this.curSelect[i] !== null && this.curSelect[i] !== 0 && this.curSelect[i] !== undefined) {
