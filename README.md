@@ -1,5 +1,9 @@
 # shop
 
+[GitHub](https://github.com/hukeqing/shop)
+
+[Example](http://119.3.172.223/vue/shop)
+
 ## Project setup
 ```
 npm install
