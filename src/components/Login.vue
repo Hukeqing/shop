@@ -73,6 +73,11 @@
                     return
                 }
 
+                if (this.user.length < 3) {
+                    this.$message.error('用户名过短')
+                    return
+                }
+
                 if (this.password.length < 6) {
                     this.$message.error('密码过短')
                     return

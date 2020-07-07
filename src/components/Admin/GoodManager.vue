@@ -92,6 +92,7 @@
                             <el-upload
                                     class="avatar-uploader"
                                     action="http://119.3.172.223/vue/shopAPI/goods/imgUpload.php"
+                                    accept=".jpg,.jpeg,.png,.gif,.bmp,.JPG,.JPEG,.GIF,.BMP"
                                     :show-file-list="false"
                                     :on-success="handleAvatarSuccess"
                                     :before-upload="beforeAvatarUpload"
@@ -266,6 +267,7 @@
 </script>
 
 <style scoped>
+    /*noinspection CssUnusedSymbol*/
     .avatar-uploader .el-upload {
         border: 3px dashed #d9d9d9;
         border-radius: 10px;
@@ -274,6 +276,7 @@
         overflow: hidden;
     }
 
+    /*noinspection CssUnusedSymbol*/
     .avatar-uploader .el-upload:hover {
         border-color: #409EFF;
     }
