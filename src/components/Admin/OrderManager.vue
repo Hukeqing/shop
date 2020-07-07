@@ -58,6 +58,7 @@
                         </div>
                     </div>
                     <h1>总计：{{total}}</h1>
+                    <p>状态：{{statusName(detail.status)}}</p>
                     <el-button type="primary" round :disabled="detail.status !== 1" v-on:click="send">发货</el-button>
                 </div>
             </el-dialog>
