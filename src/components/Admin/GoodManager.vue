@@ -19,7 +19,7 @@
                                 <el-option
                                         v-if="item.work"
                                         :key="item.id"
-                                        :label="item.tag"
+                                        :label="decodeURIComponent(item.tag)"
                                         :value="item.id">
                                 </el-option>
                             </template>
@@ -36,7 +36,7 @@
                                     <div style="height: 20px">
                                         <template v-for="t in o.tag">
                                             <el-tag v-if="tags[t - 1].work===true" :key="t" class="tag">
-                                                {{tags[t - 1].tag}}
+                                                {{decodeURIComponent(tags[t - 1].tag)}}
                                             </el-tag>
                                         </template>
                                     </div>

@@ -66,6 +66,9 @@
                 }
                 this.tags = json.data
 
+                for (let i = 0; i < this.tags.length; ++i)
+                    this.tags[i].tag = decodeURIComponent(this.tags[i].tag)
+
                 this.intervalId = setInterval(() => {
                     this.clock++
                     if (this.clock > this.tags.length + 1)

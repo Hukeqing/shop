@@ -45,7 +45,7 @@
                                     <div style="height: 20px">
                                         <template v-for="t in goods[o.gid - 1].tag">
                                             <el-tag v-if="tags[t - 1].work===true" :key="t" class="tag">
-                                                {{tags[t - 1].tag}}
+                                                {{decodeURIComponent(tags[t - 1].tag)}}
                                             </el-tag>
                                         </template>
                                     </div>

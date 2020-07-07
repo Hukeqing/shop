@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <div>
-            <h1>LOGIN</h1>
+            <h1>{{title}}</h1>
             <p>
                 <el-input placeholder="请输入用户名" v-model="user" style="width: 300px"></el-input>
             </p>
@@ -32,6 +32,12 @@
                 user: "",
                 password: "",
                 repeatPassword: ""
+            }
+        },
+
+        computed: {
+            title() {
+                return this.onLogin ? '登录' : '注册'
             }
         },
 
@@ -66,6 +72,12 @@
                     this.$message.error('两次输入的密码不相同')
                     return
                 }
+
+                if (this.password.length < 6) {
+                    this.$message.error('密码过短')
+                    return
+                }
+
                 fetch(ip + '/register.php?user=' + this.user + '&pwd=' + this.password)
                     .then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
