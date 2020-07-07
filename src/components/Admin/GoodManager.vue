@@ -82,13 +82,13 @@
                                     <el-option
                                             v-if="item.work"
                                             :key="item.id"
-                                            :label="item.tag"
+                                            :label="decodeURIComponent(item.tag)"
                                             :value="item.id">
                                     </el-option>
                                 </template>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="图片">
+                        <el-form-item label="图片" style="justify-content: center">
                             <el-upload
                                     class="avatar-uploader"
                                     action="http://119.3.172.223/vue/shopAPI/goods/imgUpload.php"
@@ -266,24 +266,24 @@
 </script>
 
 <style scoped>
-    .avatar-uploader {
-        border: 10px dashed #d9d9d9;
-        border-radius: 6px;
+    .avatar-uploader .el-upload {
+        border: 3px dashed #d9d9d9;
+        border-radius: 10px;
         cursor: pointer;
         position: relative;
         overflow: hidden;
     }
 
-    .avatar-uploader:hover {
+    .avatar-uploader .el-upload:hover {
         border-color: #409EFF;
     }
 
     .avatar-uploader-icon {
         font-size: 28px;
         color: #8c939d;
-        width: 178px;
-        height: 178px;
-        line-height: 178px;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
         text-align: center;
     }
 
