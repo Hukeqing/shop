@@ -151,6 +151,7 @@
                     return
                 }
                 this.tags = json.data
+
                 fetch(ip + '/goods/goods.php').then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
@@ -265,7 +266,7 @@
 </script>
 
 <style scoped>
-    .avatar-uploader .el-upload {
+    .avatar-uploader {
         border: 10px dashed #d9d9d9;
         border-radius: 6px;
         cursor: pointer;
@@ -273,7 +274,7 @@
         overflow: hidden;
     }
 
-    .avatar-uploader .el-upload:hover {
+    .avatar-uploader:hover {
         border-color: #409EFF;
     }
 

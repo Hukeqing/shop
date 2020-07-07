@@ -25,7 +25,7 @@
     -moz-box-shadow: 30px 30px 300px #909090; /*firefox*/
     -webkit-box-shadow: 30px 30px 300px #909090; /*safari或chrome*/
     box-shadow: 30px 30px 150px #909090; /*opera或ie9*/
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
 .round-small {

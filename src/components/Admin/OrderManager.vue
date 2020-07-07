@@ -8,7 +8,7 @@
                     <transition name="fade" v-if="clock >= index && o.id !== -1" appear>
                         <div class="item round-small">
                             <h1>编号：{{o.id}}</h1>
-                            <h3>时间：{{o.time}}</h3>
+                            <h3>{{o.time}}</h3>
                             <!--suppress JSUnresolvedVariable -->
                             <h2>费用：{{o.totalCost}}</h2>
                             <p>状态：{{statusName(o.status)}}</p>
@@ -111,7 +111,7 @@
                         let timeStamp = [0, 86400000, 604800000, 2592000000, 9223372036854775807];
                         let flag = [false, false, false, false]
                         let str = ['24小时内', '最近7天', '最近一个月', '更早之前']
-                        let curTime = parseInt(new Date().getTime());
+                        let curTime = new Date().getTime()
 
                         for (let i = 0; i < this.order.length; ++i) {
                             for (let j = 1; j < timeStamp.length; ++j) {
