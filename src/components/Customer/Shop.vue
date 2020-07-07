@@ -75,7 +75,8 @@
 
 <script>
     import Vue from 'vue'
-    import {search} from "@/static/Main";
+    import {search} from "../../static/Main"
+    import {ip} from '../../static/Ip'
 
     export default {
         name: "shop",
@@ -97,13 +98,13 @@
         },
 
         created() {
-            fetch('http://119.3.172.223/vue/shopAPI/tags.php').then(response => response.json()).then(json => {
+            fetch(ip + '/tags.php').then(response => response.json()).then(json => {
                 if (json.errorCode !== 0) {
                     this.$message.error('系统异常，请联系管理员')
                     return
                 }
                 this.tags = json.data
-                fetch('http://119.3.172.223/vue/shopAPI/goods/goods.php').then(response => response.json()).then(json => {
+                fetch(ip + '/goods/goods.php').then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return
@@ -140,7 +141,7 @@
 
         methods: {
             addToCart() {
-                let url = 'http://119.3.172.223/vue/shopAPI/addToCart.php?user=' + this.userId
+                let url = ip + '/addToCart.php?user=' + this.userId
                 for (let i = 0; i < this.curSelect.length; ++i) {
                     if (this.curSelect[i] !== null && this.curSelect[i] !== 0 && this.curSelect[i] !== undefined) {
                         fetch(url + '&id=' + this.goods[i].id + '&cnt=' + this.curSelect[i])
@@ -164,13 +165,13 @@
             },
 
             makeOrder() {
-                let url = 'http://119.3.172.223/vue/shopAPI/makerOrder.php?user=' + this.userId
+                let url = ip + '/makerOrder.php?user=' + this.userId
                 fetch(url).then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return
                     }
-                    url = 'http://119.3.172.223/vue/shopAPI/updateOrder.php?orderId=' + json.id
+                    url = ip + '/updateOrder.php?orderId=' + json.id
                     for (let i = 0; i < this.curSelect.length; ++i) {
                         if (this.curSelect[i] !== null && this.curSelect[i] !== 0 && this.curSelect[i] !== undefined) {
                             fetch(url + '&id=' + this.goods[i].id +

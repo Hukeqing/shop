@@ -69,7 +69,8 @@
 </template>
 
 <script>
-    import {str2int} from '@/static/Main'
+    import {str2int} from '../../static/Main'
+    import {ip} from '../../static/Ip'
 
     export default {
         name: "Order",
@@ -86,22 +87,22 @@
         },
 
         created() {
-            fetch('http://119.3.172.223/vue/shopAPI/tags.php').then(response => response.json()).then(json => {
+            fetch(ip + '/tags.php').then(response => response.json()).then(json => {
                 if (json.errorCode !== 0) {
                     this.$message.error('系统异常，请联系管理员')
                     return
                 }
                 this.tags = json.data
 
-                fetch('http://119.3.172.223/vue/shopAPI/goods/goods.php').then(response => response.json()).then(json => {
+                fetch(ip + '/goods/goods.php').then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return
                     }
                     this.goods = json.data
 
-                    fetch('http://119.3.172.223/vue/shopAPI/deleteOrder.php?user=' + this.userId).then(() => {
-                        fetch('http://119.3.172.223/vue/shopAPI/order.php?user=' + this.userId)
+                    fetch(ip + '/deleteOrder.php?user=' + this.userId).then(() => {
+                        fetch(ip + '/order.php?user=' + this.userId)
                             .then(response => response.json()).then(json => {
                             if (json.errorCode !== 0) {
                                 this.$message.error('系统异常，请联系管理员')
@@ -186,7 +187,7 @@
             },
 
             getDetail(o) {
-                fetch('http://119.3.172.223/vue/shopAPI/detail.php?id=' + o.id).then(response => response.json()).then(json => {
+                fetch(ip + '/detail.php?id=' + o.id).then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return
@@ -201,7 +202,7 @@
             },
 
             payFor() {
-                fetch('http://119.3.172.223/vue/shopAPI/payFor.php?id=' + this.detail.id).then(response => response.json()).then(json => {
+                fetch(ip + '/payFor.php?id=' + this.detail.id).then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return
@@ -215,7 +216,7 @@
             },
 
             cancelOrder() {
-                fetch('http://119.3.172.223/vue/shopAPI/cancelOrder.php?id=' + this.detail.id).then(response => response.json()).then(json => {
+                fetch(ip + '/cancelOrder.php?id=' + this.detail.id).then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return

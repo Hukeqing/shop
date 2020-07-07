@@ -27,9 +27,9 @@
 
 <script>
     import TagManager from './Admin/TagManager'
-    import GoodManager from "./Admin/GoodManager";
-    import StockManager from "./Admin/StockManager";
-    import OrderManager from "./Admin/OrderManager";
+    import GoodManager from "./Admin/GoodManager"
+    import StockManager from "./Admin/StockManager"
+    import OrderManager from "./Admin/OrderManager"
 
     export default {
         name: "Admin",

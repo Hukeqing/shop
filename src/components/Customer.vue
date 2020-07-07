@@ -22,9 +22,9 @@
 </template>
 
 <script>
-    import Shop from "./Customer/Shop";
-    import Cart from "./Customer/Cart";
-    import Order from "./Customer/Order";
+    import Shop from "./Customer/Shop"
+    import Cart from "./Customer/Cart"
+    import Order from "./Customer/Order"
 
     export default {
         name: "Customer",
@@ -39,32 +39,8 @@
 
         data() {
             return {
-                status: 0,
-                tags: [],
-                goods: []
+                status: 0
             }
-        },
-
-        created() {
-            fetch('http://119.3.172.223/vue/shopAPI/goods/goods.php').then(response => response.json()).then(json => {
-                if (json.errorCode !== 0) {
-                    this.$message.error('系统异常，请联系管理员')
-                    return
-                }
-                this.goods = json.data
-            }).catch(() => {
-                this.$message.error('网络异常')
-            })
-
-            fetch('http://119.3.172.223/vue/shopAPI/tags.php').then(response => response.json()).then(json => {
-                if (json.errorCode !== 0) {
-                    this.$message.error('系统异常，请联系管理员')
-                    return
-                }
-                this.tags = json.data
-            }).catch(() => {
-                this.$message.error('网络异常')
-            })
         },
 
         computed: {},

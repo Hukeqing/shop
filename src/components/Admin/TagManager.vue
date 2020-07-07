@@ -40,6 +40,8 @@
 </template>
 
 <script>
+    import {ip} from '../../static/Ip'
+
     export default {
         name: "TagManager",
 
@@ -57,7 +59,7 @@
         },
 
         created() {
-            fetch('http://119.3.172.223/vue/shopAPI/tags.php').then(response => response.json()).then(json => {
+            fetch(ip + '/tags.php').then(response => response.json()).then(json => {
                 if (json.errorCode !== 0) {
                     this.$message.error('系统异常，请联系管理员')
                     return
@@ -85,7 +87,7 @@
             },
 
             changeTagStatus(index) {
-                fetch('http://119.3.172.223/vue/shopAPI/tagStatus.php?id=' + index +
+                fetch(ip + '/tagStatus.php?id=' + index +
                     '&status=' + (this.tags[index - 1].work ? 1 : 0))
                     .then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
@@ -99,7 +101,7 @@
             },
 
             changeTagName(index) {
-                fetch('http://119.3.172.223/vue/shopAPI/tagChange.php?id=' + index +
+                fetch(ip + '/tagChange.php?id=' + index +
                     '&name=' + this.tags[index - 1].tag)
                     .then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
@@ -118,7 +120,7 @@
                     this.$message.error('请输入至少一个字符')
                     return
                 }
-                fetch('http://119.3.172.223/vue/shopAPI/tagNew.php?name=' + this.newTag)
+                fetch(ip + '/tagNew.php?name=' + this.newTag)
                     .then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')

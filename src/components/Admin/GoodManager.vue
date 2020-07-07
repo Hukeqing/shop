@@ -120,7 +120,8 @@
 </template>
 
 <script>
-    import {search} from "@/static/Main";
+    import {search} from "../../static/Main"
+    import {ip} from '../../static/Ip'
 
     export default {
         name: "GoodManager",
@@ -144,13 +145,13 @@
         },
 
         created() {
-            fetch('http://119.3.172.223/vue/shopAPI/tags.php').then(response => response.json()).then(json => {
+            fetch(ip + '/tags.php').then(response => response.json()).then(json => {
                 if (json.errorCode !== 0) {
                     this.$message.error('系统异常，请联系管理员')
                     return
                 }
                 this.tags = json.data
-                fetch('http://119.3.172.223/vue/shopAPI/goods/goods.php').then(response => response.json()).then(json => {
+                fetch(ip + '/goods/goods.php').then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return
@@ -211,7 +212,7 @@
             saveChange() {
                 if (this.isNew) {
                     // NEW
-                    fetch('http://119.3.172.223/vue/shopAPI/goods/goodNew.php?name=' + this.goods[this.curSelect - 1].name +
+                    fetch(ip + '/goods/goodNew.php?name=' + this.goods[this.curSelect - 1].name +
                         '&tag=' + this.goods[this.curSelect - 1].tag.join(';') +
                         '&img=' + this.goods[this.curSelect - 1].img +
                         '&price=' + this.goods[this.curSelect - 1].price)
@@ -226,7 +227,7 @@
                     })
                 } else {
                     // CHANGE
-                    fetch('http://119.3.172.223/vue/shopAPI/goods/goodUpdate.php?id=' + this.curSelect +
+                    fetch(ip + '/goods/goodUpdate.php?id=' + this.curSelect +
                         '&name=' + this.goods[this.curSelect - 1].name +
                         '&tag=' + this.goods[this.curSelect - 1].tag.join(';') +
                         '&img=' + this.goods[this.curSelect - 1].img +

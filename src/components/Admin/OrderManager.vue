@@ -66,7 +66,8 @@
 </template>
 
 <script>
-    import {str2int} from "@/static/Main";
+    import {str2int} from "../../static/Main";
+    import {ip} from '../../static/Ip'
 
     export default {
         name: "OrderManager",
@@ -84,21 +85,21 @@
         },
 
         created() {
-            fetch('http://119.3.172.223/vue/shopAPI/tags.php').then(response => response.json()).then(json => {
+            fetch(ip + '/tags.php').then(response => response.json()).then(json => {
                 if (json.errorCode !== 0) {
                     this.$message.error('系统异常，请联系管理员')
                     return
                 }
                 this.tags = json.data
 
-                fetch('http://119.3.172.223/vue/shopAPI/goods/goods.php').then(response => response.json()).then(json => {
+                fetch(ip + '/goods/goods.php').then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return
                     }
                     this.goods = json.data
 
-                    fetch('http://119.3.172.223/vue/shopAPI/orderAll.php')
+                    fetch(ip + '/orderAll.php')
                         .then(response => response.json()).then(json => {
                         if (json.errorCode !== 0) {
                             this.$message.error('系统异常，请联系管理员')
@@ -168,7 +169,7 @@
             },
 
             getDetail(o) {
-                fetch('http://119.3.172.223/vue/shopAPI/detail.php?id=' + o.id).then(response => response.json()).then(json => {
+                fetch(ip + '/detail.php?id=' + o.id).then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return
@@ -183,7 +184,7 @@
             },
 
             send() {
-                fetch('http://119.3.172.223/vue/shopAPI/orderSend.php?id=' + this.detail.id).then(response => response.json()).then(json => {
+                fetch(ip + '/orderSend.php?id=' + this.detail.id).then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return

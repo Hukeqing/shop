@@ -21,6 +21,8 @@
 </template>
 
 <script>
+    import {ip} from '../static/Ip'
+
     export default {
         name: "Login",
         props: {},
@@ -41,7 +43,7 @@
                 }
                 // this.$emit('login', {id: 1, admin: true, user: 'Admin'})
 
-                fetch('http://119.3.172.223/vue/shopAPI/login.php?user=' + this.user + '&pwd=' + this.password)
+                fetch(ip + '/login.php?user=' + this.user + '&pwd=' + this.password)
                     .then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('用户名或密码出错')
@@ -64,7 +66,7 @@
                     this.$message.error('两次输入的密码不相同')
                     return
                 }
-                fetch('http://119.3.172.223/vue/shopAPI/register.php?user=' + this.user + '&pwd=' + this.password)
+                fetch(ip + '/register.php?user=' + this.user + '&pwd=' + this.password)
                     .then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('用户名已经被注册')

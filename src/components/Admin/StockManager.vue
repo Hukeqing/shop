@@ -64,7 +64,8 @@
 </template>
 
 <script>
-    import {search} from "@/static/Main";
+    import {search} from "../../static/Main"
+    import {ip} from '../../static/Ip'
 
     export default {
         name: "StockManager",
@@ -86,13 +87,13 @@
         },
 
         created() {
-            fetch('http://119.3.172.223/vue/shopAPI/tags.php').then(response => response.json()).then(json => {
+            fetch(ip + '/tags.php').then(response => response.json()).then(json => {
                 if (json.errorCode !== 0) {
                     this.$message.error('系统异常，请联系管理员')
                     return
                 }
                 this.tags = json.data
-                fetch('http://119.3.172.223/vue/shopAPI/goods/goods.php').then(response => response.json()).then(json => {
+                fetch(ip + '/goods/goods.php').then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return
@@ -121,7 +122,7 @@
             submitUpdate() {
                 for (let i = 0; i < this.curUpdate.length; ++i) {
                     if (this.curUpdate[i] !== null && this.curUpdate[i] !== undefined && this.curUpdate[i] !== 0) {
-                        fetch('http://119.3.172.223/vue/shopAPI/goods/goodAdd.php?id=' + i +
+                        fetch(ip + '/goods/goodAdd.php?id=' + i +
                             '&cnt=' + (this.goods[i].inventory + this.curUpdate[i]))
                             .then(response => response.json()).then(json => {
                             if (json.errorCode !== 0) {

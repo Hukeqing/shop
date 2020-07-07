@@ -59,7 +59,8 @@
 
 <script>
     import Vue from "vue";
-    import {search} from "@/static/Main";
+    import {search} from "../../static/Main"
+    import {ip} from '../../static/Ip'
 
     export default {
         name: "Cart",
@@ -82,21 +83,21 @@
         },
 
         created() {
-            fetch('http://119.3.172.223/vue/shopAPI/tags.php').then(response => response.json()).then(json => {
+            fetch(ip + '/tags.php').then(response => response.json()).then(json => {
                 if (json.errorCode !== 0) {
                     this.$message.error('系统异常，请联系管理员')
                     return
                 }
                 this.tags = json.data
 
-                fetch('http://119.3.172.223/vue/shopAPI/goods/goods.php').then(response => response.json()).then(json => {
+                fetch(ip + '/goods/goods.php').then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return
                     }
                     this.goods = json.data
 
-                    fetch('http://119.3.172.223/vue/shopAPI/cart.php?user=' + this.userId).then(response => response.json()).then(json => {
+                    fetch(ip + '/cart.php?user=' + this.userId).then(response => response.json()).then(json => {
                         if (json.errorCode !== 0) {
                             this.$message.error('系统异常，请联系管理员')
                             return
@@ -144,7 +145,7 @@
             },
 
             removeItem() {
-                let url = 'http://119.3.172.223/vue/shopAPI/removeCart.php?id='
+                let url = ip + '/removeCart.php?id='
                 for (let i = 0; i < this.curSelect.length; ++i) {
                     if (this.curSelect[i] === 1) {
                         fetch(url + this.cart[i].id).then(response => response.json()).then(json => {
@@ -166,14 +167,14 @@
             },
 
             makeOrder() {
-                let url = 'http://119.3.172.223/vue/shopAPI/makerOrder.php?user=' + this.userId
+                let url = ip + '/makerOrder.php?user=' + this.userId
                 fetch(url).then(response => response.json()).then(json => {
                     if (json.errorCode !== 0) {
                         this.$message.error('系统异常，请联系管理员')
                         return
                     }
-                    url = 'http://119.3.172.223/vue/shopAPI/updateOrder.php?orderId=' + json.id
-                    let removeUrl = 'http://119.3.172.223/vue/shopAPI/removeCart.php?id='
+                    url = ip + '/updateOrder.php?orderId=' + json.id
+                    let removeUrl = ip + '/removeCart.php?id='
                     for (let i = 0; i < this.curSelect.length; ++i) {
                         if (this.curSelect[i] === 1) {
                             fetch(url + '&id=' + this.cart[i].gid +
