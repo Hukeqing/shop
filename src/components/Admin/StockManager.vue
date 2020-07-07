@@ -122,7 +122,7 @@
             submitUpdate() {
                 for (let i = 0; i < this.curUpdate.length; ++i) {
                     if (this.curUpdate[i] !== null && this.curUpdate[i] !== undefined && this.curUpdate[i] !== 0) {
-                        fetch(ip + '/goods/goodAdd.php?id=' + i +
+                        fetch(ip + '/goods/goodAdd.php?id=' + this.goods[i].id +
                             '&cnt=' + (this.goods[i].inventory + this.curUpdate[i]))
                             .then(response => response.json()).then(json => {
                             if (json.errorCode !== 0) {

@@ -9,7 +9,7 @@ $arr_query = convertUrlQuery($_SERVER["QUERY_STRING"]);
 $id = $arr_query['id'];
 $cnt = $arr_query['cnt'];
 
-$sqlStr = 'update Goods set Inventory = '.$cnt.';';
+$sqlStr = 'update Goods set Inventory = '.$cnt.' where id='.$id.';';
 $rs = querySQL($sqlStr);
 $ans = new res();
 $ans->errorCode = 0;
